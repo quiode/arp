@@ -2,9 +2,18 @@
 name = "arp"
 version = "0.1.0"
 edition = "2021"
+authors = ["Dominik Schwaiger <mail@dominik-schwaiger.ch>"]
+description = "GUI Application that let's the user upload packages to the AUR"
+readme = "README.md"
+repository = "https://github.com/quiode/arp"
+license = "MIT"
+keywords = ["tool", "aur", "gui"]
+categories = ["gui", "development-tools"]
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-git2 = "0.15.0"
+adw = { version = "0.2.0", package = "libadwaita" }
+git = { version = "0.15.0", package = "git2" }
 gtk = { version = "0.5.1", package = "gtk4" }
