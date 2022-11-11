@@ -2,8 +2,8 @@
 <interface>
     <template class="MainWindow" parent="AdwApplicationWindow">
         <property name="title">AUR Uploader</property>
-        <property name="default_width">650</property>
-        <property name="default_height">550</property>
+        <property name="default_width">600</property>
+        <property name="default_height">450</property>
         <property name="content">
             <object class="GtkStack">
                 <property name="transition-type">crossfade</property>
@@ -14,29 +14,51 @@
                             <object class="GtkBox">
                                 <property name="orientation">vertical</property>
                                 <child>
-                                    <object class="GtkHeaderBar">
+                                    <object class="AdwHeaderBar">
+                                        <style>
+                                            <class name="flat" />
+                                        </style>
                                     </object>
-                                    <!-- <object class="AdwStatusPage">
-                                        <property name="icon-name">folder</property>
-                                        <property name="title">Contribute a new piece of Software</property>
-                                        <property name="description">No openend directory found. Open an existing one or create a new one.</property>
-                                    </object> -->
-                                    <!-- <object class="GtkBox">
-                                        <property name="orientation">horizontal</property>
-                                        <child>
-                                            <object class="AdwButtonContent">
-                                                <property name="icon-name">document-open-symbolic</property>
-                                                <property name="label" translatable="yes">_Open</property>
-                                                <property name="use-underline">True</property>
+                                </child>
+                                <child>
+                                    <object class="GtkWindowHandle">
+                                        <property name="vexpand">True</property>
+                                        <property name="child">
+                                            <object class="AdwStatusPage">
+                                                <property name="icon-name">folder</property>
+                                                <property name="title" translatable="yes">No Project opened</property>
+                                                <property name="description" translatable="yes">Open an existing project or create a new one</property>
+                                                <property name="child">
+                                                    <object class="GtkBox">
+                                                        <property name="orientation">horizontal</property>
+                                                        <property name="homogeneous">true</property>
+                                                        <property name="spacing">26</property>
+                                                        <property name="baseline-position">center</property>
+                                                        <child>
+                                                            <object class="GtkButton">
+                                                                <property name="label" translatable="yes">Open</property>
+                                                                <property name="margin-start">26</property>
+                                                                <property name="margin-end">26</property>
+                                                                <!-- <style>
+                                                                    <class name="suggested-action"/>
+                                                                </style> -->
+                                                            </object>
+                                                        </child>
+                                                        <child>
+                                                            <object class="GtkButton">
+                                                                <property name="label" translatable="yes">New</property>
+                                                                <property name="margin-start">26</property>
+                                                                <property name="margin-end">26</property>
+                                                                <style>
+                                                                    <class name="suggested-action"/>
+                                                                </style>
+                                                            </object>
+                                                        </child>
+                                                    </object>
+                                                </property>
                                             </object>
-
-                                            <object class="AdwButtonContent">
-                                                <property name="icon-name">document-open-symbolic</property>
-                                                <property name="label" translatable="yes">_Open</property>
-                                                <property name="use-underline">True</property>
-                                            </object>
-                                        </child>
-                                    </object> -->
+                                        </property>
+                                    </object>
                                 </child>
                             </object>
                         </property>
