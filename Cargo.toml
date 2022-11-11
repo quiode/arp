@@ -17,3 +17,6 @@ publish = false
 adw = { version = "0.2.0", package = "libadwaita" }
 git = { version = "0.15.0", package = "git2" }
 gtk = { version = "0.5.1", package = "gtk4" }
+
+[build-dependencies]
+glib-build-tools = "0.16.0"
