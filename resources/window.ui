@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="MainWindow" parent="AdwApplicationWindow">
+        <property name="title">AUR Uploader</property>
+        <property name="default_width">650</property>
+        <property name="default_height">550</property>
+        <property name="content">
+            <object class="GtkStack">
+                <property name="transition-type">crossfade</property>
+                <child>
+                    <object class="GtkStackPage">
+                        <property name="name">main</property>
+                        <property name="child">
+                            <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <child>
+                                    <object class="GtkHeaderBar">
+                                    </object>
+                                    <!-- <object class="AdwStatusPage">
+                                        <property name="icon-name">folder</property>
+                                        <property name="title">Contribute a new piece of Software</property>
+                                        <property name="description">No openend directory found. Open an existing one or create a new one.</property>
+                                    </object> -->
+                                    <!-- <object class="GtkBox">
+                                        <property name="orientation">horizontal</property>
+                                        <child>
+                                            <object class="AdwButtonContent">
+                                                <property name="icon-name">document-open-symbolic</property>
+                                                <property name="label" translatable="yes">_Open</property>
+                                                <property name="use-underline">True</property>
+                                            </object>
+
+                                            <object class="AdwButtonContent">
+                                                <property name="icon-name">document-open-symbolic</property>
+                                                <property name="label" translatable="yes">_Open</property>
+                                                <property name="use-underline">True</property>
+                                            </object>
+                                        </child>
+                                    </object> -->
+                                </child>
+                            </object>
+                        </property>
+                    </object>
+                </child>
+            </object>
+        </property>
+    </template>
+</interface>
