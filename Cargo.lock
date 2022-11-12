@@ -16,6 +16,7 @@ dependencies = [
  "glib-build-tools",
  "gtk4",
  "libadwaita",
+ "once_cell",
 ]
 
 [[package]]

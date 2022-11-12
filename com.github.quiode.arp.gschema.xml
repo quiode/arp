@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+    <schema id="com.github.quiode.arp" path="/com/github/quiode/arp/">
+        <key name="project-path" type="mo">
+            <default>nothing</default>
+            <summary>Path to the project folder</summary>
+        </key>
+    </schema>
+</schemalist>

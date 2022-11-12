@@ -6,11 +6,11 @@
         <property name="default_width">600</property>
         <property name="default_height">450</property>
         <property name="content">
-            <object class="GtkStack">
+            <object class="GtkStack" id="stack">
                 <property name="transition-type">crossfade</property>
                 <child>
                     <object class="GtkStackPage">
-                        <property name="name">main</property>
+                        <property name="name">no-project</property>
                         <property name="child">
                             <object class="GtkBox">
                                 <property name="orientation">vertical</property>
@@ -61,6 +61,16 @@
                                         </property>
                                     </object>
                                 </child>
+                            </object>
+                        </property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkStackPage">
+                        <property name="name">main</property>
+                        <property name="child">
+                            <object class="GtkLabel">
+                                <property name="label">Main Page</property>
                             </object>
                         </property>
                     </object>

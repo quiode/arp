@@ -1,9 +1,14 @@
-use adw::subclass::prelude::AdwApplicationWindowImpl;
-use gtk::{glib, prelude::*, subclass::prelude::*, CompositeTemplate};
+use adw::{prelude::*, subclass::prelude::*};
+use gtk::{gio::Settings, glib, prelude::*, subclass::prelude::*, CompositeTemplate, Stack};
+use once_cell::sync::OnceCell;
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/github/quiode/arp/window.ui")]
-pub struct Window {}
+pub struct Window {
+    pub settings: OnceCell<Settings>,
+    #[template_child]
+    pub stack: TemplateChild<Stack>,
+}
 
 #[glib::object_subclass]
 impl ObjectSubclass for Window {
@@ -22,9 +27,23 @@ impl ObjectSubclass for Window {
     }
 }
 
-impl ObjectImpl for Window {}
+impl ObjectImpl for Window {
+    fn constructed(&self) {
+        self.parent_constructed();
 
-impl WidgetImpl for Window {}
+        // setup
+        let obj = self.obj();
+
+        obj.setup_settings();
+        obj.set_stack();
+    }
+}
+
+impl WidgetImpl for Window {
+    fn show(&self) {
+        self.parent_show();
+    }
+}
 
 impl WindowImpl for Window {}
 
