@@ -2,6 +2,8 @@ use adw::{prelude::*, subclass::prelude::*};
 use gtk::{gio::Settings, glib, prelude::*, subclass::prelude::*, CompositeTemplate, Stack};
 use once_cell::sync::OnceCell;
 
+use crate::start_page::StartPage;
+
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/github/quiode/arp/window.ui")]
 pub struct Window {
@@ -19,6 +21,9 @@ impl ObjectSubclass for Window {
     type ParentType = adw::ApplicationWindow;
 
     fn class_init(klass: &mut Self::Class) {
+        // register child templates
+        StartPage::ensure_type();
+
         klass.bind_template();
     }
 

@@ -12,55 +12,7 @@
                     <object class="GtkStackPage">
                         <property name="name">no-project</property>
                         <property name="child">
-                            <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <child>
-                                    <object class="AdwHeaderBar">
-                                        <style>
-                                            <class name="flat" />
-                                        </style>
-                                    </object>
-                                </child>
-                                <child>
-                                    <object class="GtkWindowHandle">
-                                        <property name="vexpand">True</property>
-                                        <property name="child">
-                                            <object class="AdwStatusPage">
-                                                <property name="icon-name">folder</property>
-                                                <property name="title" translatable="yes">No Project opened</property>
-                                                <property name="description" translatable="yes">Open an existing project or create a new one</property>
-                                                <property name="child">
-                                                    <object class="GtkBox">
-                                                        <property name="orientation">horizontal</property>
-                                                        <property name="homogeneous">true</property>
-                                                        <property name="spacing">26</property>
-                                                        <property name="baseline-position">center</property>
-                                                        <child>
-                                                            <object class="GtkButton">
-                                                                <property name="label" translatable="yes">Open</property>
-                                                                <property name="margin-start">26</property>
-                                                                <property name="margin-end">26</property>
-                                                                <!-- <style>
-                                                                    <class name="suggested-action"/>
-                                                                </style> -->
-                                                            </object>
-                                                        </child>
-                                                        <child>
-                                                            <object class="GtkButton">
-                                                                <property name="label" translatable="yes">New</property>
-                                                                <property name="margin-start">26</property>
-                                                                <property name="margin-end">26</property>
-                                                                <style>
-                                                                    <class name="suggested-action"/>
-                                                                </style>
-                                                            </object>
-                                                        </child>
-                                                    </object>
-                                                </property>
-                                            </object>
-                                        </property>
-                                    </object>
-                                </child>
+                            <object class="StartPage">
                             </object>
                         </property>
                     </object>

@@ -1,7 +1,5 @@
 mod imp;
 
-use std::path::PathBuf;
-
 use glib::Object;
 use gtk::glib::variant::ObjectPath;
 use gtk::prelude::*;
