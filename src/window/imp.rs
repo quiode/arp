@@ -1,5 +1,8 @@
 use adw::{prelude::*, subclass::prelude::*};
-use gtk::{gio::Settings, glib, prelude::*, subclass::prelude::*, CompositeTemplate, Stack};
+use gtk::{
+    gio::Settings, glib, prelude::*, subclass::prelude::*, Button, CompositeTemplate,
+    FileChooserAction, FileChooserNative, Stack,
+};
 use once_cell::sync::OnceCell;
 
 use crate::start_page::StartPage;
@@ -40,6 +43,7 @@ impl ObjectImpl for Window {
         let obj = self.obj();
 
         obj.setup_settings();
+        obj.setup_actions();
         obj.set_stack();
     }
 }

@@ -27,6 +27,8 @@
                                 <child>
                                     <object class="GtkButton">
                                         <property name="label" translatable="yes">Open</property>
+                                        <property name="action-name">win.file-dialog</property>
+                                        <property name="action-target">false</property>
                                         <property name="margin-start">26</property>
                                         <property name="margin-end">26</property>
                                         <!-- <style>
@@ -37,6 +39,8 @@
                                 <child>
                                     <object class="GtkButton">
                                         <property name="label" translatable="yes">New</property>
+                                        <property name="action-name">win.file-dialog</property>
+                                        <property name="action-target">true</property>
                                         <property name="margin-start">26</property>
                                         <property name="margin-end">26</property>
                                         <style>
