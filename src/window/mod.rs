@@ -41,7 +41,7 @@ impl Window {
 
         action_file_dialog.connect_activate(
             clone!(@weak self as window => move |_action, parameter| {
-                window.create_file_dialog(parameter.expect("No parameter provided in file dialog action!").get::<bool>().expect("This value needs to be of type `bool`!"));
+                window.project_location_dialog(parameter.expect("No parameter provided in file dialog action!").get::<bool>().expect("This value needs to be of type `bool`!"));
             }),
         );
 
@@ -70,7 +70,7 @@ impl Window {
         }
     }
 
-    fn create_file_dialog(&self, create_folder: bool) {
+    fn project_location_dialog(&self, create_folder: bool) {
         let title: Option<&str>;
 
         if create_folder {
