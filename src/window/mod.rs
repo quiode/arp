@@ -29,7 +29,23 @@ impl Window {
     fn setup_settings(&self) {
         let settings = Settings::new(APP_ID);
 
-        self.imp()
+        // every time the path changes, check that the path is still valid, else display the placeholder page
+        // WARNING: This could lead to probles if the path just changes and the whole application reloads, maybe not
+        settings.connect_changed(
+            Some("project-path"),
+            clone!(@weak self as window => move |settings, key|{
+                window.set_stack();
+                }
+            ),
+        );
+
+        // read the value to the signal handler gets registered correctly
+        let path = settings.get::<Option<ObjectPath>>("project-path");
+
+        // save settings
+        settings
+            .self
+            .imp()
             .settings
             .set(settings)
             .expect("`settings` should not be set before calling `setup_settings`.");
@@ -55,6 +71,7 @@ impl Window {
             .expect("`settings` should be set in `setup_settings`.")
     }
 
+    // displays the no_project page if no project is selected, else displays the main page
     fn set_stack(&self) {
         let settings = self.settings();
         let stack = &self.imp().stack;
