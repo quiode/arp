@@ -10,6 +10,7 @@ use gtk::{ gio::{ self, Settings }, glib };
 use gtk::{ prelude::*, FileChooserAction, FileChooserDialog, ResponseType };
 
 use crate::APP_ID;
+use crate::package_manager::Repository;
 
 glib::wrapper! {
     pub struct Window(ObjectSubclass<imp::Window>)
@@ -110,7 +111,13 @@ impl Window {
                             // check that directory is empty
                             if create_folder {
                             if file.path().expect("Error while converting file to pathbuf!").read_dir().expect("Error while reading directory!").next().is_none() {
-                                window.settings().set("project-path", &Some(ObjectPath::try_from(file.path().unwrap().to_str().expect("Couldn't convert path to string!")).expect("Path is not valid!"))).expect("Couldn't save path!");
+                                let path = file.path().unwrap();
+                                let path = path.to_str().expect("Couldn't convert path to string!");
+                                window.settings().set("project-path", &Some(ObjectPath::try_from(path).expect("Path is not valid!"))).expect("Couldn't save path!");
+
+                                if let Ok(repo) = Repository::new(path){
+                                    repo.save_data();
+                                };
                         } 
                         else {
                             window.error_dialog("Folder is not empty!");

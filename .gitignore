@@ -1,2 +1,4 @@
 /target
 *.bkp
+.idea
+.vscode

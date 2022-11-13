@@ -44,8 +44,7 @@ impl ObjectImpl for MainPage {
             self.repository
                 .try_borrow_mut()
                 .unwrap()
-                .load_path(path.as_str())
-                .unwrap();
+                .load_path(path.as_str());
         }
 
         settings.connect_changed(
@@ -56,7 +55,7 @@ impl ObjectImpl for MainPage {
                     main_page.repository
                         .try_borrow_mut()
                         .unwrap()
-                        .load_path(path.as_str()).unwrap();
+                        .load_path(path.as_str());
                 }
             }),
         );

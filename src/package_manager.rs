@@ -25,7 +25,9 @@ impl Repository {
             Ok(true) => (),
         }
 
-        Command::new(format!("git init {}", repo_path))
+        Command::new(format!("git"))
+            .arg("init")
+            .arg(repo_path)
             .output()
             .or(Err(RepositoryError::GitError))?;
 
@@ -49,10 +51,10 @@ impl Repository {
 
     // uploads the repository to the aur
     pub fn upload(&self) -> RResult<()> {
-        self.run_command("git fetch aur")?;
-        self.run_command("git add .")?;
-        self.run_command("git commit -m \"commit through arp\"")?;
-        self.run_command("git push aur")
+        self.run_command("git", vec!["fetch", "aur"])?;
+        self.run_command("git", vec!["add", "."])?;
+        self.run_command("git", vec!["commit", "-m", "\"commit through arp\""])?;
+        self.run_command("git", vec!["push", "aur"])
     }
 
     // returns the repository data from a json file
@@ -96,8 +98,9 @@ impl Repository {
         Ok(fs::read_dir(path)?.next().is_none())
     }
 
-    fn run_command(&self, command: &str) -> RResult<()> {
+    fn run_command(&self, command: &str, args: Vec<&str>) -> RResult<()> {
         Command::new(command)
+            .args(args)
             .current_dir(&self.path)
             .output()
             .or(Err(RepositoryError::GitFetchError))?;
@@ -110,11 +113,22 @@ impl Repository {
             Some(name) => name,
             None => return Err(RepositoryError::DataNotProvied),
         };
-        self.run_command(&format!(
-            "git remote add aur ssh://aur@aur.archlinux.org/{}.git",
-            name
-        ))?;
-        self.run_command("git fetch aur")
+        self.run_command(
+            "git",
+            vec![
+                "remote",
+                "add",
+                "aur",
+                &format!("ssh://aur@aur.archlinux.org/{}.git", name),
+            ],
+        )?;
+        self.run_command("git", vec!["fetch", "aur"])
+    }
+}
+
+impl Drop for Repository {
+    fn drop(&mut self) {
+        self.save_data().ok();
     }
 }
 
@@ -133,7 +147,6 @@ pub enum RepositoryError {
     FolderNotEmpty,
     GitFetchError,
     GitError,
-    NoRemote,
     DataNotProvied,
     SerializeError,
 }
@@ -147,7 +160,6 @@ impl Display for RepositoryError {
             RepositoryError::FolderNotEmpty => "Folder not Empty",
             RepositoryError::GitError => "Git Error",
             RepositoryError::GitFetchError => "Git Fetch Error",
-            RepositoryError::NoRemote => "No Remote",
             RepositoryError::DataNotProvied => "Data not Provied",
             RepositoryError::SerializeError => "Serialize Error",
         };
