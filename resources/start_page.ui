@@ -16,7 +16,7 @@
                 <property name="child">
                     <object class="AdwStatusPage">
                         <property name="icon-name">folder</property>
-                        <property name="title" translatable="yes">No Project opened</property>
+                        <property name="title" translatable="yes">No Project Open</property>
                         <property name="description" translatable="yes">Open an existing project or create a new one</property>
                         <property name="child">
                             <object class="GtkBox">
@@ -31,9 +31,6 @@
                                         <property name="action-target">false</property>
                                         <property name="margin-start">26</property>
                                         <property name="margin-end">26</property>
-                                        <!-- <style>
-                                                                    <class name="suggested-action"/>
-                                                                </style> -->
                                     </object>
                                 </child>
                                 <child>

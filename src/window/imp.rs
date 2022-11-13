@@ -1,8 +1,5 @@
 use adw::{prelude::*, subclass::prelude::*};
-use gtk::{
-    gio::Settings, glib, prelude::*, subclass::prelude::*, Button, CompositeTemplate,
-    FileChooserAction, FileChooserNative, Stack,
-};
+use gtk::{gio::Settings, glib, CompositeTemplate, Stack};
 use once_cell::sync::OnceCell;
 
 use crate::start_page::StartPage;

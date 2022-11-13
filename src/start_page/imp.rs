@@ -1,5 +1,5 @@
+use gtk::glib;
 use gtk::subclass::prelude::*;
-use gtk::{glib, Button, FileChooserNative};
 use gtk::{prelude::*, CompositeTemplate};
 
 #[derive(CompositeTemplate, Default)]

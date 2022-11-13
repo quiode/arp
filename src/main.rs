@@ -1,7 +1,6 @@
 mod start_page;
 mod window;
 use gtk::gio;
-use gtk::gio::Settings;
 use gtk::prelude::*;
 
 const APP_ID: &str = "com.github.quiode.arp";

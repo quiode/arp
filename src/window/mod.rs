@@ -6,11 +6,8 @@ use gtk::gio::SimpleAction;
 use gtk::glib::clone;
 use gtk::glib::variant::ObjectPath;
 use gtk::subclass::prelude::*;
-use gtk::{
-    gio::{self, Settings},
-    glib,
-};
-use gtk::{prelude::*, FileChooserAction, FileChooserDialog, ResponseType};
+use gtk::{ gio::{ self, Settings }, glib };
+use gtk::{ prelude::*, FileChooserAction, FileChooserDialog, ResponseType };
 
 use crate::APP_ID;
 
@@ -37,37 +34,35 @@ impl Window {
             clone!(@weak self as window => move |_settings,_key|{
                 window.set_stack();
                 }
-            ),
+            )
         );
 
         // read the value to the signal handler gets registered correctly
-        let path = settings.get::<Option<ObjectPath>>("project-path");
+        let _path = settings.get::<Option<ObjectPath>>("project-path");
 
         // save settings
         self.imp()
-            .settings
-            .set(settings)
+            .settings.set(settings)
             .expect("`settings` should not be set before calling `setup_settings`.");
     }
 
     fn setup_actions(&self) {
-        let action_file_dialog =
-            SimpleAction::new("file-dialog", Some(&bool::static_variant_type()));
+        let action_file_dialog = SimpleAction::new(
+            "file-dialog",
+            Some(&bool::static_variant_type())
+        );
 
         action_file_dialog.connect_activate(
             clone!(@weak self as window => move |_action, parameter| {
                 window.project_location_dialog(parameter.expect("No parameter provided in file dialog action!").get::<bool>().expect("This value needs to be of type `bool`!"));
-            }),
+            })
         );
 
         self.add_action(&action_file_dialog);
     }
 
     fn settings(&self) -> &Settings {
-        self.imp()
-            .settings
-            .get()
-            .expect("`settings` should be set in `setup_settings`.")
+        self.imp().settings.get().expect("`settings` should be set in `setup_settings`.")
     }
 
     // displays the no_project page if no project is selected, else displays the main page
@@ -88,11 +83,14 @@ impl Window {
 
     fn project_location_dialog(&self, create_folder: bool) {
         let title: Option<&str>;
+        let accept: &str;
 
         if create_folder {
-            title = Some("Create a project");
+            title = Some("Select project location");
+            accept = "Select";
         } else {
             title = Some("Open a project");
+            accept = "Open";
         }
 
         let file_dialog = FileChooserDialog::new(
@@ -101,25 +99,33 @@ impl Window {
             FileChooserAction::SelectFolder,
             &[
                 ("Cancel", ResponseType::Cancel),
-                ("Open", ResponseType::Accept),
-            ],
+                (accept, ResponseType::Accept),
+            ]
         );
 
         file_dialog.connect_response(
             clone!(@weak self as window => move |file_chooser, response| {
-                // TODO: Create Error messages and don't just close the file dialog!
                     if response == ResponseType::Accept {
                         if let Some(file) = file_chooser.file() {
                             // check that directory is empty
-                            if file.path().expect("Error while converting file to pathbuf!").read_dir().expect("Error while reading directory!").next().is_none(){
-                            println!("{}", file.path().unwrap().to_string_lossy());
+                            if create_folder {
+                            if file.path().expect("Error while converting file to pathbuf!").read_dir().expect("Error while reading directory!").next().is_none() {
+                                window.settings().set("project-path", &Some(ObjectPath::try_from(file.path().unwrap().to_str().expect("Couldn't convert path to string!")).expect("Path is not valid!"))).expect("Couldn't save path!");
+                        } 
+                        else {
+                            window.error_dialog("Folder is not empty!");
+                        }}
+                    else {
+                                window.settings().set("project-path", &Some(ObjectPath::try_from(file.path().unwrap().to_str().expect("Couldn't convert path to string!")).expect("Path is not valid!"))).expect("Couldn't save path!");
+                        }} 
+                        else {
+                            window.error_dialog("Couldn't open Folder!");
                         }
-                        };
                     }
 
                 window.set_visible(true);
                 file_chooser.destroy();
-            }),
+            })
         );
 
         file_dialog.present();
