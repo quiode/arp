@@ -1,4 +1,4 @@
-# ARP - AUR Uploader
+# ARP - AUR Uploader ![Logo](resources/arp.png)
 
 ## Description
 
