@@ -33,7 +33,7 @@ impl Window {
         // WARNING: This could lead to probles if the path just changes and the whole application reloads, maybe not
         settings.connect_changed(
             Some("project-path"),
-            clone!(@weak self as window => move |settings, key|{
+            clone!(@weak self as window => move |_settings,_key|{
                 window.set_stack();
                 }
             ),
@@ -43,9 +43,7 @@ impl Window {
         let path = settings.get::<Option<ObjectPath>>("project-path");
 
         // save settings
-        settings
-            .self
-            .imp()
+        self.imp()
             .settings
             .set(settings)
             .expect("`settings` should not be set before calling `setup_settings`.");
@@ -118,10 +116,12 @@ impl Window {
                         };
                     }
 
+                window.set_visible(true);
                 file_chooser.destroy();
             }),
         );
 
         file_dialog.present();
+        self.set_visible(false);
     }
 }
