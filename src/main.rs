@@ -1,4 +1,5 @@
 mod main_page;
+mod package_manager;
 mod start_page;
 mod window;
 use gtk::gio;
