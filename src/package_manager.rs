@@ -2,7 +2,7 @@ use std::{
     error::Error,
     fmt::Display,
     fs::{self, ReadDir},
-    io::{self, Read},
+    io::{self, Read, Write},
     process::Command,
 };
 
@@ -28,10 +28,7 @@ impl Repository {
             .output()
             .or(Err(RepositoryError::GitError))?;
 
-        let data = RepositoryData {
-            email: None,
-            name: None,
-        };
+        let data = RepositoryData::default();
 
         Ok(Self {
             path: repo_path.to_string(),
@@ -51,21 +48,39 @@ impl Repository {
 
     // uploads the repository to the aur
     pub fn upload(&self) -> RResult<()> {
-        self.run_command("git fetch")?;
+        self.run_command("git fetch aur")?;
         self.run_command("git add .")?;
-
-        todo!()
+        self.run_command("git commit -m \"commit through arp\"")?;
+        self.run_command("git push aur")
     }
 
-    // returns the repository data
-    fn get_data(repo_path: &str) -> RResult<RepositoryData> {
-        let mut file = fs::File::open(repo_path).or(Err(RepositoryError::NotARepository))?;
+    pub fn get_data(&self) -> RepositoryData {
+        self.data.clone()
+    }
+
+    // returns the repository data from a json file
+    fn read_data(repo_path: &str) -> RResult<RepositoryData> {
+        let mut file = fs::File::open(&format!("{}/{}", repo_path, DATA_PATH))
+            .or(Err(RepositoryError::NotARepository))?;
 
         let mut string_data = String::new();
         file.read_to_string(&mut string_data)
             .or(Err(RepositoryError::NotARepository))?;
 
         Ok(serde_json::from_str(&string_data).or(Err(RepositoryError::NotARepository))?)
+    }
+
+    // saves repo data to a json file
+    fn save_data(&self, repo_path: &str) -> RResult<()> {
+        let json = serde_json::to_string(&self.data).or(Err(RepositoryError::SerializeError))?;
+
+        // save file
+        let mut file = fs::File::create(&format!("{}/{}", repo_path, DATA_PATH))
+            .or(Err(RepositoryError::SerializeError))?;
+
+        file.write_all(json.as_bytes())
+            .or(Err(RepositoryError::SerializeError))?;
+        Ok(())
     }
 
     // returns tru if folder is empty
@@ -80,10 +95,24 @@ impl Repository {
             .or(Err(RepositoryError::GitFetchError))?;
         Ok(())
     }
+
+    // adds the aur as a remote and performs a fetch to register the package on the aur
+    fn register_package(&self) -> RResult<()> {
+        let name = match self.data.package_name {
+            Some(name) => name,
+            None => return Err(RepositoryError::DataNotProvied),
+        };
+        self.run_command(&format!(
+            "git remote add aur ssh://aur@aur.archlinux.org/{}.git",
+            name
+        ))?;
+        self.run_command("git fetch aur")
+    }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
 struct RepositoryData {
+    package_name: Option<String>,
     email: Option<String>,
     name: Option<String>,
 }
@@ -97,6 +126,8 @@ pub enum RepositoryError {
     GitFetchError,
     GitError,
     NoRemote,
+    DataNotProvied,
+    SerializeError,
 }
 
 impl Error for RepositoryError {}
