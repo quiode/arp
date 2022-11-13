@@ -13,8 +13,12 @@
             <object class="GtkWindowHandle">
                 <property name="vexpand">True</property>
                 <property name="child">
-                    <object class="GtkLabel">
-                        <property name="label">Main Page</property>
+                    <object class="GtkScrolledWindow">
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="label">Main Page</property>
+                            </object>
+                        </child>
                     </object>
                 </property>
             </object>
