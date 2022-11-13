@@ -1,5 +1,6 @@
 mod imp;
 
+use adw::traits::MessageDialogExt;
 use glib::Object;
 use gtk::gio::SimpleAction;
 use gtk::glib::clone;
@@ -123,5 +124,19 @@ impl Window {
 
         file_dialog.present();
         self.set_visible(false);
+    }
+
+    // shows error dialog with text
+    fn error_dialog(&self, text: &str) {
+        let dialog = adw::MessageDialog::new(Some(self), Some("An Error has occured!"), Some(text));
+
+        dialog.add_response("ok", "Understood");
+        dialog.set_response_appearance("ok", adw::ResponseAppearance::Destructive);
+
+        dialog.connect_response(None, move |dialog, _id| {
+            dialog.destroy();
+        });
+
+        dialog.present();
     }
 }
