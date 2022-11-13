@@ -41,23 +41,33 @@ impl ObjectImpl for MainPage {
 
         if let Some(path) = path {
             // TODO: good error handling
-            self.repository
+            if let Err(err) = self
+                .repository
                 .try_borrow_mut()
                 .unwrap()
-                .load_path(path.as_str());
+                .load_path(path.as_str())
+            {
+                settings.set("project-path", &None::<ObjectPath>);
+                println!("{}", err);
+            }
         }
 
         settings.connect_changed(
             Some("project-path"),
             clone!(@weak self as main_page => move |settings, key| {
-                let path: Option<ObjectPath> = settings.get(key);
-                if let Some(path) = path {
-                    main_page.repository
-                        .try_borrow_mut()
-                        .unwrap()
-                        .load_path(path.as_str());
-                }
-            }),
+            let path: Option<ObjectPath> = settings.get(key);
+            if let Some(path) = path {
+                // TODO: good error handling
+                if let Err(err) = main_page
+                    .repository
+                    .try_borrow_mut()
+                    .unwrap()
+                    .load_path(path.as_str()) {
+                            settings.set("project-path", &None::<ObjectPath>);
+                            println!("{}",err);
+                        }
+                    }
+                    }),
         );
 
         self.settings

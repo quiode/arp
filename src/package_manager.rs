@@ -74,7 +74,7 @@ impl Repository {
     // loads new path
     pub fn load_path(&mut self, new_path: &str) -> RResult<()> {
         // save data
-        self.save_data()?;
+        self.save_data();
         let data = Self::read_data(new_path)?;
 
         self.path = new_path.to_string();

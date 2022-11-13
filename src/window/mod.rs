@@ -113,11 +113,11 @@ impl Window {
                             if file.path().expect("Error while converting file to pathbuf!").read_dir().expect("Error while reading directory!").next().is_none() {
                                 let path = file.path().unwrap();
                                 let path = path.to_str().expect("Couldn't convert path to string!");
-                                window.settings().set("project-path", &Some(ObjectPath::try_from(path).expect("Path is not valid!"))).expect("Couldn't save path!");
-
                                 if let Ok(repo) = Repository::new(path){
                                     repo.save_data();
                                 };
+                                
+                                window.settings().set("project-path", &Some(ObjectPath::try_from(path).expect("Path is not valid!"))).expect("Couldn't save path!");
                         } 
                         else {
                             window.error_dialog("Folder is not empty!");
