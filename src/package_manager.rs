@@ -3,15 +3,15 @@ use std::{
     fmt::Display,
     fs::{self, ReadDir},
     io::{self, Read},
+    process::Command,
 };
 
-use git::{IndexAddOption, IntoCString};
 use serde::{Deserialize, Serialize};
 
 const DATA_PATH: &str = "data.json";
 
 pub struct Repository {
-    git_repo: git::Repository,
+    path: String,
     data: RepositoryData,
 }
 
@@ -24,15 +24,8 @@ impl Repository {
             Ok(true) => (),
         }
 
-        let repo = git::Repository::init(repo_path).or(Err(RepositoryError::GitError))?;
-
-        repo.config()
-            .or(Err(RepositoryError::GitError))?
-            .set_str("user.name", "arp")
-            .or(Err(RepositoryError::GitError))?;
-        repo.config()
-            .or(Err(RepositoryError::GitError))?
-            .set_str("user.email", "arp@github.com")
+        Command::new(format!("git init {}", repo_path))
+            .output()
             .or(Err(RepositoryError::GitError))?;
 
         let data = RepositoryData {
@@ -41,48 +34,25 @@ impl Repository {
         };
 
         Ok(Self {
-            git_repo: repo,
+            path: repo_path.to_string(),
             data,
         })
     }
 
     // opens an existing repository
     pub fn open(repo_path: &str) -> RResult<Self> {
-        let repo = match git::Repository::open(repo_path) {
-            Ok(repo) => repo,
-            Err(_) => return Err(RepositoryError::NotARepository),
-        };
-
         let data = Self::get_data(repo_path)?;
 
         Ok(Self {
+            path: repo_path.to_string(),
             data,
-            git_repo: repo,
         })
     }
 
     // uploads the repository to the aur
     pub fn upload(&self) -> RResult<()> {
-        self.fetch()?;
-
-        let mut index = self.git_repo.index().or(Err(RepositoryError::GitError))?;
-
-        index
-            .update_all(["*"], None)
-            .or(Err(RepositoryError::GitError))?;
-
-        index
-            .add_all(["*"], IndexAddOption::DEFAULT, None)
-            .or(Err(RepositoryError::GitError))?;
-
-        self.git_repo.commit(
-            None,
-            &self.git_repo.signature().unwrap(),
-            &self.git_repo.signature().unwrap(),
-            &format!("arp commit_ {:#?}", std::time::SystemTime::now()),
-            tree,
-            parents,
-        );
+        self.run_command("git fetch")?;
+        self.run_command("git add .")?;
 
         todo!()
     }
@@ -103,12 +73,12 @@ impl Repository {
         Ok(fs::read_dir(path)?.next().is_none())
     }
 
-    fn fetch(&self) -> RResult<()> {
-        self.git_repo
-            .find_remote("origin")
-            .or(Err(RepositoryError::NoRemote))?
-            .fetch(&["master"], None, None)
-            .or(Err(RepositoryError::GitFetchError))
+    fn run_command(&self, command: &str) -> RResult<()> {
+        Command::new(command)
+            .current_dir(&self.path)
+            .output()
+            .or(Err(RepositoryError::GitFetchError))?;
+        Ok(())
     }
 }
 
