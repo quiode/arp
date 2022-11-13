@@ -3,5 +3,6 @@
   <gresource prefix="/com/github/quiode/arp/">
     <file compressed="true" preprocess="xml-stripblanks">window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">start_page.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">main_page.ui</file>
   </gresource>
 </gresources>

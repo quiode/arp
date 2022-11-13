@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="MainPage" parent="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+            <object class="AdwHeaderBar">
+                <style>
+                    <class name="flat" />
+                </style>
+            </object>
+        </child>
+        <child>
+            <object class="GtkWindowHandle">
+                <property name="vexpand">True</property>
+                <property name="child">
+                    <object class="GtkLabel">
+                        <property name="label">Main Page</property>
+                    </object>
+                </property>
+            </object>
+        </child>
+    </template>
+</interface>

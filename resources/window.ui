@@ -22,8 +22,7 @@
                     <object class="GtkStackPage">
                         <property name="name">main</property>
                         <property name="child">
-                            <object class="GtkLabel">
-                                <property name="label">Main Page</property>
+                            <object class="MainPage">
                             </object>
                         </property>
                     </object>
