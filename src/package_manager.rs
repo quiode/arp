@@ -316,16 +316,16 @@ impl Drop for Repository {
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct RepositoryData {
-    name: Option<String>,
-    email: Option<String>,
     username: Option<String>,
+    email: Option<String>,
+    name: Option<String>,
+    desc: Option<String>,
+    url: Option<String>,
+    license: Vec<String>,
     version: Option<String>,
     rel: Option<String>,
     epoch: Option<String>,
-    desc: Option<String>,
     arch: Vec<String>,
-    url: Option<String>,
-    license: Vec<String>,
     groups: Vec<String>,
     depends: Vec<String>,
     makedepends: Vec<String>,

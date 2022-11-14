@@ -31,61 +31,197 @@
                     <object class="GtkBox">
                         <property name="baseline-position">center</property>
                         <property name="orientation">vertical</property>
+                        <property name="margin-end">12</property>
                         <child>
                             <object class="GtkExpander">
-                                <property name="label">Package Info</property>
+                                <property name="label">Maintainer</property>
                                 <property name="expanded">true</property>
                                 <child>
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="GtkBox">
-                                                <property name="orientation">horizontal</property>
-                                                <child>
-                                                    <object class="AdwEntryRow">
-                                                        <property name="title">Maintainer Name</property>
-                                                        <property name="input-purpose">name</property>
-                                                        <property name="margin-top">10</property>
-                                                        <property name="margin-bottom">5</property>
-                                                    </object>
-                                                </child>
-                                                <child>
-                                                    <object class="GtkButton">
-                                                        <signal name="clicked" handler="handle_help_button_clicked"/>
-                                                        <property name="name">username-button</property>
-                                                        <property name="icon-name">overexposure</property>
-                                                        <property name="margin-start">5</property>
-                                                    </object>
-                                                </child>
-                                            </object>
-                                        </child>
-                                        <child>
-                                            <object class="AdwEntryRow">
-                                                <property name="title">Maintainer Mail</property>
-                                                <property name="input-purpose">email</property>
-                                                <property name="margin-top">5</property>
-                                                <property name="margin-bottom">5</property>
+                                            <object class="Entry">
+                                                <property name="text">Maintainer Name</property>
+                                                <property name="link">https://wiki.archlinux.org/title/AUR_submission_guidelines#Rules_of_submission</property>
                                             </object>
                                         </child>
                                         <child>
                                             <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="AdwEntryRow">
-                                                <property name="title">Package Name</property>
-                                                <property name="margin-top">5</property>
-                                                <property name="margin-bottom">5</property>
+                                            <object class="Entry">
+                                                <property name="text">Maintainer Mail</property>
+                                                <property name="link">https://wiki.archlinux.org/title/AUR_submission_guidelines#Rules_of_submission</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Package Name</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Package Name</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgname</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Version</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Package Version</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgver</property>
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="AdwEntryRow">
-                                                <property name="title">Package Version</property>
-                                                <property name="margin-top">5</property>
-                                                <property name="margin-bottom">5</property>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
                                             </object>
                                         </child>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Release Number</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgrel</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Epoch</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#epoch</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Generic</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Description</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgdesc</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                                <property name="margin-bottom">10</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Architectures</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgdesc</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-top">10</property>
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">URL</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#url</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Dependencies</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Package relations</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Others</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Sources</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Integrity</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
                                     </object>
                                 </child>
                             </object>

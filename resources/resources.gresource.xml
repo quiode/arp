@@ -4,5 +4,8 @@
     <file compressed="true" preprocess="xml-stripblanks">window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">start_page.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">main_page.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">entry.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">list.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">list_item.ui</file>
   </gresource>
 </gresources>

@@ -4,7 +4,7 @@ use gtk::gio::Settings;
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{self, clone};
 use gtk::subclass::prelude::*;
-use gtk::{prelude::*, template_callbacks, Button, Popover, TextBuffer};
+use gtk::{prelude::*, template_callbacks, Button, Label, Popover, TextBuffer};
 use gtk::{CompositeTemplate, TextView};
 use once_cell::unsync::OnceCell;
 
@@ -26,7 +26,6 @@ impl ObjectSubclass for MainPage {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
-        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
@@ -80,31 +79,6 @@ impl ObjectImpl for MainPage {
         if let Ok(repo) = self.repository.try_borrow() {
             repo.save_data().ok();
         }
-    }
-}
-
-#[gtk::template_callbacks]
-impl MainPage {
-    #[template_callback]
-    fn handle_help_button_clicked(button: &Button) {
-        let popover = Popover::new();
-        popover.set_parent(button);
-        popover.set_autohide(true);
-        popover.set_hexpand(true);
-
-        // child
-        let text = match button.widget_name().as_str(){
-            "username-button" => "The Name of the Maintainer of the Package (https://wiki.archlinux.org/title/AUR_submission_guidelines#Rules_of_submission)",
-            name => {println!("{}", name); return},
-        };
-        let child = TextView::new();
-        let text_buffer = TextBuffer::new(None);
-        text_buffer.insert_at_cursor(text);
-        child.set_buffer(Some(&text_buffer));
-        child.set_wrap_mode(gtk::WrapMode::Word);
-        popover.set_child(Some(&child));
-
-        popover.popup();
     }
 }
 

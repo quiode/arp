@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="Entry" parent="GtkBox">
+        <property name="orientation">horizontal</property>
+        <child>
+            <object class="AdwEntryRow" id="entry_row">
+                <property name="hexpand">true</property>
+                <property name="margin-top">5</property>
+                <property name="margin-bottom">5</property>
+            </object>
+        </child>
+        <child>
+            <object class="GtkLinkButton" id="link_button">
+                <property name="icon-name">overexposure</property>
+            </object>
+        </child>
+    </template>
+</interface>

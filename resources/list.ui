@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="List" parent="GtkBox">
+        <property name="orientation">horizontal</property>
+        <child>
+            <object class="GtkFrame">
+                <property name="hexpand">true</property>
+                <child>
+                    <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                            <object class="GtkLabel" id="label">
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkSeparator">
+                                <property name="margin-start">5</property>
+                                <property name="margin-end">5</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkBox">
+                                <property name="margin-start">5</property>
+                                <property name="margin-end">5</property>
+                                <property name="margin-top">5</property>
+                                <property name="margin-bottom">5</property>
+                                <property name="orientation">horizontal</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                    <object class="GtkEntry" id="entry">
+                                        <property name="hexpand">true</property>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkButton">
+                                        <signal name="clicked" handler="handle_button_clicked" swapped="true"/>
+                                        <property name="icon-name">bqm-add</property>
+                                    </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkSeparator">
+                                <property name="margin-start">60</property>
+                                <property name="margin-end">60</property>
+                                <property name="margin-top">0</property>
+                                <property name="margin-bottom">5</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkListBox" id="list_box">
+                                <property name="show-separators">true</property>
+                                <property name="selection-mode">none</property>
+                            </object>
+                        </child>
+                    </object>
+                </child>
+            </object>
+        </child>
+        <child>
+            <object class="GtkLinkButton" id="link_button">
+                <property name="icon-name">overexposure</property>
+            </object>
+        </child>
+    </template>
+</interface>
