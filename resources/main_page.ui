@@ -8,6 +8,7 @@
     </menu>
     <template class="MainPage" parent="GtkBox">
         <property name="orientation">vertical</property>
+        <property name="baseline-position">center</property>
         <child>
             <object class="AdwHeaderBar">
                 <style>
@@ -22,17 +23,75 @@
             </object>
         </child>
         <child>
-            <object class="GtkWindowHandle">
-                <property name="vexpand">True</property>
-                <property name="child">
-                    <object class="GtkScrolledWindow">
+            <object class="GtkScrolledWindow">
+                <property name="halign">center</property>
+                <property name="propagate-natural-width">true</property>
+                <property name="propagate-natural-height">true</property>
+                <child>
+                    <object class="GtkBox">
+                        <property name="baseline-position">center</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="label">Main Page</property>
+                            <object class="GtkExpander">
+                                <property name="label">Package Info</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <object class="GtkBox">
+                                        <property name="baseline-position">center</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="GtkBox">
+                                                <property name="orientation">horizontal</property>
+                                                <child>
+                                                    <object class="AdwEntryRow">
+                                                        <property name="title">Maintainer Name</property>
+                                                        <property name="input-purpose">name</property>
+                                                        <property name="margin-top">10</property>
+                                                        <property name="margin-bottom">5</property>
+                                                    </object>
+                                                </child>
+                                                <child>
+                                                    <object class="GtkButton">
+                                                        <signal name="clicked" handler="handle_help_button_clicked"/>
+                                                        <property name="name">username-button</property>
+                                                        <property name="icon-name">overexposure</property>
+                                                        <property name="margin-start">5</property>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="AdwEntryRow">
+                                                <property name="title">Maintainer Mail</property>
+                                                <property name="input-purpose">email</property>
+                                                <property name="margin-top">5</property>
+                                                <property name="margin-bottom">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="AdwEntryRow">
+                                                <property name="title">Package Name</property>
+                                                <property name="margin-top">5</property>
+                                                <property name="margin-bottom">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="AdwEntryRow">
+                                                <property name="title">Package Version</property>
+                                                <property name="margin-top">5</property>
+                                                <property name="margin-bottom">5</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
                             </object>
                         </child>
                     </object>
-                </property>
+                </child>
             </object>
         </child>
     </template>

@@ -4,7 +4,7 @@ use gtk::glib::{self, Object};
 
 glib::wrapper! {
     pub struct MainPage(ObjectSubclass<imp::MainPage>)
-    @extends gtk::Widget,
+    @extends gtk::Box, gtk::Widget,
     @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
 }
 

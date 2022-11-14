@@ -67,18 +67,18 @@ impl Window {
 
         action_about_window.connect_activate(clone!(@weak self as window => move |_action, _parameter| {
             // create about dialog
-            let about_dialog = adw::AboutWindow::new();
-            about_dialog.set_application_icon("arp");
-            about_dialog.set_application_name("ARP - AUR Uploader");
-            about_dialog.set_developer_name("Dominik Schwaiger <mail@dominik-schwaiger.ch>");
-            about_dialog.set_version("0.0.1");
-            about_dialog.set_issue_url("https://github.com/quiode/arp/issues/new/choose");
-            about_dialog.set_license_type(gtk::License::MitX11);
-            about_dialog.set_comments(" GUI Application that let's the user upload packages to the AUR ");
-            about_dialog.set_resizable(false);
-            about_dialog.add_link("GitHub", "https://github.com/quiode/arp");
+            let about_window = adw::AboutWindow::new();
+            about_window.set_application_icon("arp");
+            about_window.set_application_name("ARP - AUR Uploader");
+            about_window.set_developer_name("Dominik Schwaiger <mail@dominik-schwaiger.ch>");
+            about_window.set_version("0.0.1");
+            about_window.set_issue_url("https://github.com/quiode/arp/issues/new/choose");
+            about_window.set_license_type(gtk::License::MitX11);
+            about_window.set_comments(" GUI Application that let's the user upload packages to the AUR ");
+            about_window.set_resizable(false);
+            about_window.add_link("GitHub", "https://github.com/quiode/arp");
 
-            about_dialog.show();
+            about_window.show();
         }));
 
         self.add_action(&action_about_window);
