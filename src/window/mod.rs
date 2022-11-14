@@ -48,6 +48,7 @@ impl Window {
     }
 
     fn setup_actions(&self) {
+        // file-dialog action
         let action_file_dialog = SimpleAction::new(
             "file-dialog",
             Some(&bool::static_variant_type())
@@ -60,6 +61,27 @@ impl Window {
         );
 
         self.add_action(&action_file_dialog);
+
+        // about-window action
+        let action_about_window = SimpleAction::new("about", None);
+
+        action_about_window.connect_activate(clone!(@weak self as window => move |_action, _parameter| {
+            // create about dialog
+            let about_dialog = adw::AboutWindow::new();
+            about_dialog.set_application_icon("arp");
+            about_dialog.set_application_name("ARP - AUR Uploader");
+            about_dialog.set_developer_name("Dominik Schwaiger <mail@dominik-schwaiger.ch>");
+            about_dialog.set_version("0.0.1");
+            about_dialog.set_issue_url("https://github.com/quiode/arp/issues/new/choose");
+            about_dialog.set_license_type(gtk::License::MitX11);
+            about_dialog.set_comments(" GUI Application that let's the user upload packages to the AUR ");
+            about_dialog.set_resizable(false);
+            about_dialog.add_link("GitHub", "https://github.com/quiode/arp");
+
+            about_dialog.show();
+        }));
+
+        self.add_action(&action_about_window);
     }
 
     fn settings(&self) -> &Settings {
