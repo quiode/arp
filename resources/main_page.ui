@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+    <menu id="main-menu">
+        <item>
+            <attribute name="label" translatable="yes">About</attribute>
+            <attribute name="action">win.about</attribute>
+        </item>
+    </menu>
     <template class="MainPage" parent="GtkBox">
         <property name="orientation">vertical</property>
         <child>
@@ -7,6 +13,12 @@
                 <style>
                     <class name="flat" />
                 </style>
+                <child type ="end">
+                    <object class="GtkMenuButton">
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <property name="menu-model">main-menu</property>
+                    </object>
+                </child>
             </object>
         </child>
         <child>
