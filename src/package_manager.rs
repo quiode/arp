@@ -82,6 +82,188 @@ impl Repository {
         Ok(())
     }
 
+    // exports everything to the package build
+    pub fn export_to_pkgbuild(&self) -> RResult<()> {
+        let mut pkgbuild = fs::File::create(format!("{}/PKGBUILD", self.path))
+            .or(Err(RepositoryError::NotARepository))?;
+
+        let string = format!(
+            "
+# Maintainer: {username} <{email}>
+pkgname={name}
+pkgver={version}
+pkgrel={rel}
+epoch={epoch}
+pkgdesc=\"{desc}\"
+arch=({arch})
+url=\"{url}\"
+license=({license})
+groups=({groups})
+depends=({depends})
+makedepends=({makedepends})
+checkdepends=({checkdepends})
+optdepends=({optdepends})
+provides=({provides})
+conflicts=({conflicts})
+replaces=({replaces})
+backup=({backup})
+options=({options})
+install={install}
+changelog={changelog}
+source=({source})
+noextract=({noextract})
+md5sums=({md5sums})
+validpgpkeys=({gpgkeys})
+
+prepare() {{
+        {prepare}
+}}
+
+build() {{
+        {build}
+}}
+
+check() {{
+        {check}
+}}
+
+package() {{
+        {package}
+}}
+",
+            name = self.data.name.clone().unwrap_or(String::new()),
+            email = self.data.email.clone().unwrap_or(String::new()),
+            username = self.data.username.clone().unwrap_or(String::new()),
+            version = self.data.version.clone().unwrap_or(String::new()),
+            rel = self.data.rel.clone().unwrap_or(String::new()),
+            epoch = self.data.epoch.clone().unwrap_or(String::new()),
+            desc = self.data.desc.clone().unwrap_or(String::new()),
+            arch = self
+                .data
+                .arch
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            url = self.data.url.clone().unwrap_or(String::new()),
+            license = self
+                .data
+                .license
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            groups = self
+                .data
+                .groups
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            depends = self
+                .data
+                .depends
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            makedepends = self
+                .data
+                .makedepends
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            checkdepends = self
+                .data
+                .checkdepends
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            optdepends = self
+                .data
+                .optdepends
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            provides = self
+                .data
+                .provides
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            conflicts = self
+                .data
+                .conflicts
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            replaces = self
+                .data
+                .replaces
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            backup = self
+                .data
+                .backup
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            options = self
+                .data
+                .options
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            install = self.data.install.clone().unwrap_or(String::new()),
+            changelog = self.data.changelog.clone().unwrap_or(String::new()),
+            source = self
+                .data
+                .source
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            noextract = self
+                .data
+                .noextract
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            md5sums = self
+                .data
+                .md5sums
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            gpgkeys = self
+                .data
+                .gpgkeys
+                .iter()
+                .map(|val| format!("'{}'", val))
+                .collect::<Vec<String>>()
+                .join(","),
+            prepare = self.data.prepare.clone().unwrap_or(String::new()),
+            build = self.data.build.clone().unwrap_or(String::new()),
+            check = self.data.check.clone().unwrap_or(String::new()),
+            package = self.data.package.clone().unwrap_or(String::new()),
+        );
+
+        pkgbuild
+            .write_all(string.as_bytes())
+            .or(Err(RepositoryError::PKGBUILDError))
+    }
+
     fn read_data(repo_path: &str) -> RResult<RepositoryData> {
         let mut file = fs::File::open(&format!("{}/{}", repo_path, DATA_PATH))
             .or(Err(RepositoryError::NotARepository))?;
@@ -109,7 +291,7 @@ impl Repository {
 
     // adds the aur as a remote and performs a fetch to register the package on the aur
     fn register_package(&self) -> RResult<()> {
-        let name = match &self.data.package_name {
+        let name = match &self.data.name {
             Some(name) => name,
             None => return Err(RepositoryError::DataNotProvied),
         };
@@ -134,9 +316,36 @@ impl Drop for Repository {
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct RepositoryData {
-    package_name: Option<String>,
-    email: Option<String>,
     name: Option<String>,
+    email: Option<String>,
+    username: Option<String>,
+    version: Option<String>,
+    rel: Option<String>,
+    epoch: Option<String>,
+    desc: Option<String>,
+    arch: Vec<String>,
+    url: Option<String>,
+    license: Vec<String>,
+    groups: Vec<String>,
+    depends: Vec<String>,
+    makedepends: Vec<String>,
+    checkdepends: Vec<String>,
+    optdepends: Vec<String>,
+    provides: Vec<String>,
+    conflicts: Vec<String>,
+    replaces: Vec<String>,
+    backup: Vec<String>,
+    options: Vec<String>,
+    install: Option<String>,
+    changelog: Option<String>,
+    source: Vec<String>,
+    noextract: Vec<String>,
+    md5sums: Vec<String>,
+    gpgkeys: Vec<String>,
+    prepare: Option<String>,
+    build: Option<String>,
+    check: Option<String>,
+    package: Option<String>,
 }
 
 pub type RResult<T> = Result<T, RepositoryError>;
@@ -149,6 +358,7 @@ pub enum RepositoryError {
     GitError,
     DataNotProvied,
     SerializeError,
+    PKGBUILDError,
 }
 
 impl Error for RepositoryError {}
@@ -162,6 +372,7 @@ impl Display for RepositoryError {
             RepositoryError::GitFetchError => "Git Fetch Error",
             RepositoryError::DataNotProvied => "Data not Provied",
             RepositoryError::SerializeError => "Serialize Error",
+            RepositoryError::PKGBUILDError => "PKGBUILD Error",
         };
 
         write!(f, "{}", text)
