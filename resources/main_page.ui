@@ -140,7 +140,6 @@
                                             <object class="GtkSeparator">
                                                 <property name="margin-start">5</property>
                                                 <property name="margin-end">5</property>
-                                                <property name="margin-bottom">10</property>
                                             </object>
                                         </child>
                                         <child>
@@ -151,7 +150,6 @@
                                         </child>
                                         <child>
                                             <object class="GtkSeparator">
-                                                <property name="margin-top">10</property>
                                                 <property name="margin-start">5</property>
                                                 <property name="margin-end">5</property>
                                             </object>
@@ -160,6 +158,30 @@
                                             <object class="Entry">
                                                 <property name="text">URL</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#url</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">License</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#license</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Groups</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#groups</property>
                                             </object>
                                         </child>
                                     </object>
@@ -174,6 +196,48 @@
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Dependencies</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#depends</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Make Dependencies</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#makedepends</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Check Dependencies</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#checkdepends</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Optional Dependencies</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#optdepends</property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>
@@ -186,6 +250,36 @@
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Provides</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#provides</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Conflicts</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#conflicts</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Replaces</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#replaces</property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>
@@ -198,6 +292,48 @@
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Backup</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#backup</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Options</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#options</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Install Script</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#install</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="Entry">
+                                                <property name="text">Changelog</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#changelog</property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>
@@ -210,6 +346,36 @@
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">Source files</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#source</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">No Extract</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#noextract</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkSeparator">
+                                                <property name="margin-start">5</property>
+                                                <property name="margin-end">5</property>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">PGP Keys</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#validpgpkeys</property>
+                                            </object>
+                                        </child>
                                     </object>
                                 </child>
                             </object>
@@ -222,7 +388,22 @@
                                     <object class="GtkBox">
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
+                                        <child>
+                                            <object class="List">
+                                                <property name="title">MD5 Checksums</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
+                                            </object>
+                                        </child>
                                     </object>
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkExpander">
+                                <property name="label">Scripts</property>
+                                <property name="expanded">true</property>
+                                <child>
+                                    <!-- TODO: Option to generate based on file: if it is a binary, different programming languages (only support rust), and custom: provide custom script -->
                                 </child>
                             </object>
                         </child>
