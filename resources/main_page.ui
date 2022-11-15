@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
     <menu id="main-menu">
-        <item>
-            <attribute name="label" translatable="yes">About</attribute>
-            <attribute name="action">win.about</attribute>
-        </item>
         <section>
             <item>
                 <attribute name="label" translatable="yes">Delete</attribute>
@@ -17,6 +13,24 @@
             <item>
                 <attribute name="label" translatable="yes">Publish</attribute>
                 <attribute name="action">repo.publish</attribute>
+            </item>
+        </section>
+        <section>
+            <item>
+                <attribute name="label" translatable="yes">Open New</attribute>
+                <attribute name="action">win.file-dialog</attribute>
+                <attribute name="target" type="b">false</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">Create New</attribute>
+                <attribute name="action">win.file-dialog</attribute>
+                <attribute name="target" type="b">true</attribute>
+            </item>
+        </section>
+        <section>
+            <item>
+                <attribute name="label" translatable="yes">About</attribute>
+                <attribute name="action">win.about</attribute>
             </item>
         </section>
     </menu>
