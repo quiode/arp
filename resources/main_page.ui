@@ -431,7 +431,7 @@
                                 <property name="label">Scripts</property>
                                 <property name="expanded">true</property>
                                 <child>
-                                    <!-- TODO: Option to generate based on file: if it is a binary, different programming languages (only support rust), and custom: provide custom script -->
+                                    <!-- TODO: Option to generate based on file: if it is a binary, different programming languages (only support rust), makefile and custom: provide custom script -->
                                 </child>
                             </object>
                         </child>
