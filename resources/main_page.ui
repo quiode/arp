@@ -69,7 +69,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="maintainer_name">
                                                 <property name="text">Maintainer Name</property>
                                                 <property name="link">https://wiki.archlinux.org/title/AUR_submission_guidelines#Rules_of_submission</property>
                                             </object>
@@ -81,7 +81,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="maintainer_email">
                                                 <property name="text">Maintainer Mail</property>
                                                 <property name="link">https://wiki.archlinux.org/title/AUR_submission_guidelines#Rules_of_submission</property>
                                             </object>
@@ -99,7 +99,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="package_name">
                                                 <property name="text">Package Name</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgname</property>
                                             </object>
@@ -117,7 +117,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="package_version">
                                                 <property name="text">Package Version</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgver</property>
                                             </object>
@@ -129,7 +129,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="release_number">
                                                 <property name="text">Release Number</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgrel</property>
                                             </object>
@@ -141,7 +141,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="epoch">
                                                 <property name="text">Epoch</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#epoch</property>
                                             </object>
@@ -159,7 +159,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="description">
                                                 <property name="text">Description</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgdesc</property>
                                             </object>
@@ -171,9 +171,9 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="architectures">
                                                 <property name="title">Architectures</property>
-                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgdesc</property>
+                                                <property name="link">https://wiki.archlinux.org/title/PKGBUILD#arch</property>
                                             </object>
                                         </child>
                                         <child>
@@ -183,7 +183,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="url">
                                                 <property name="text">URL</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#url</property>
                                             </object>
@@ -195,7 +195,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="license">
                                                 <property name="title">License</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#license</property>
                                             </object>
@@ -207,7 +207,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="groups">
                                                 <property name="title">Groups</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#groups</property>
                                             </object>
@@ -225,7 +225,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="dependencies">
                                                 <property name="title">Dependencies</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#depends</property>
                                             </object>
@@ -237,7 +237,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="makedependencies">
                                                 <property name="title">Make Dependencies</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#makedepends</property>
                                             </object>
@@ -249,7 +249,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="checkdependencies">
                                                 <property name="title">Check Dependencies</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#checkdepends</property>
                                             </object>
@@ -261,7 +261,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="optdependencies">
                                                 <property name="title">Optional Dependencies</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#optdepends</property>
                                             </object>
@@ -279,7 +279,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="provides">
                                                 <property name="title">Provides</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#provides</property>
                                             </object>
@@ -291,7 +291,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="conflicts">
                                                 <property name="title">Conflicts</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#conflicts</property>
                                             </object>
@@ -303,7 +303,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="replaces">
                                                 <property name="title">Replaces</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#replaces</property>
                                             </object>
@@ -321,7 +321,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="backup">
                                                 <property name="title">Backup</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#backup</property>
                                             </object>
@@ -333,7 +333,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="options">
                                                 <property name="title">Options</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#options</property>
                                             </object>
@@ -345,7 +345,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="install">
                                                 <property name="text">Install Script</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#install</property>
                                             </object>
@@ -357,7 +357,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="Entry">
+                                            <object class="Entry" id="changelog">
                                                 <property name="text">Changelog</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#changelog</property>
                                             </object>
@@ -375,7 +375,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="sources">
                                                 <property name="title">Source files</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#source</property>
                                             </object>
@@ -387,7 +387,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="noextract">
                                                 <property name="title">No Extract</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#noextract</property>
                                             </object>
@@ -399,7 +399,7 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="pgpkeys">
                                                 <property name="title">PGP Keys</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#validpgpkeys</property>
                                             </object>
@@ -417,7 +417,7 @@
                                         <property name="baseline-position">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                            <object class="List">
+                                            <object class="List" id="md5">
                                                 <property name="title">MD5 Checksums</property>
                                                 <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
                                             </object>

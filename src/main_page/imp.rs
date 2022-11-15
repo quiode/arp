@@ -8,6 +8,8 @@ use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
 use once_cell::unsync::OnceCell;
 
+use crate::entry::Entry;
+use crate::list::List;
 use crate::package_manager::Repository;
 use crate::APP_ID;
 
@@ -16,6 +18,58 @@ use crate::APP_ID;
 pub struct MainPage {
     repository: RefCell<Repository>,
     settings: OnceCell<Settings>,
+    #[template_child]
+    maintainer_name: TemplateChild<Entry>,
+    #[template_child]
+    maintainer_email: TemplateChild<Entry>,
+    #[template_child]
+    package_name: TemplateChild<Entry>,
+    #[template_child]
+    package_version: TemplateChild<Entry>,
+    #[template_child]
+    release_number: TemplateChild<Entry>,
+    #[template_child]
+    epoch: TemplateChild<Entry>,
+    #[template_child]
+    description: TemplateChild<Entry>,
+    #[template_child]
+    architectures: TemplateChild<List>,
+    #[template_child]
+    url: TemplateChild<Entry>,
+    #[template_child]
+    license: TemplateChild<List>,
+    #[template_child]
+    groups: TemplateChild<List>,
+    #[template_child]
+    dependencies: TemplateChild<List>,
+    #[template_child]
+    makedependencies: TemplateChild<List>,
+    #[template_child]
+    checkdependencies: TemplateChild<List>,
+    #[template_child]
+    optdependencies: TemplateChild<List>,
+    #[template_child]
+    provides: TemplateChild<List>,
+    #[template_child]
+    conflicts: TemplateChild<List>,
+    #[template_child]
+    replaces: TemplateChild<List>,
+    #[template_child]
+    backup: TemplateChild<List>,
+    #[template_child]
+    options: TemplateChild<List>,
+    #[template_child]
+    install: TemplateChild<Entry>,
+    #[template_child]
+    changelog: TemplateChild<Entry>,
+    #[template_child]
+    sources: TemplateChild<List>,
+    #[template_child]
+    noextract: TemplateChild<List>,
+    #[template_child]
+    pgpkeys: TemplateChild<List>,
+    #[template_child]
+    md5: TemplateChild<List>,
 }
 
 impl MainPage {

@@ -1,6 +1,6 @@
 use gtk::glib::{closure_local, ParamSpec, ParamSpecString, ParamSpecValueArray};
 use gtk::subclass::prelude::*;
-use gtk::{glib, prelude::*, Box, Button, Label, ListBox};
+use gtk::{glib, prelude::*, Box, Button, Label, ListBox, ListBoxRow};
 use gtk::{CompositeTemplate, Entry, LinkButton};
 use once_cell::sync::Lazy;
 
@@ -22,12 +22,58 @@ pub struct List {
 impl List {
     // gets the values from all the children and converts them to strings
     fn get_values(&self) -> Vec<String> {
-        todo!()
+        let children = self.get_children();
+
+        children
+            .into_iter()
+            .map(|child| child.property::<String>("label"))
+            .collect()
     }
 
     // deletes all children and creates new one for each value
     fn set_values(&self, values: Vec<String>) {
-        todo!()
+        // clear all children
+        self.clear();
+        for value in values {
+            let new_item = self.create_list_item(&value);
+            self.list_box.append(&new_item);
+        }
+    }
+
+    // gets all list box items
+    fn get_children(&self) -> Vec<ListBoxRow> {
+        let mut i = 0;
+        let mut values = vec![];
+        while let Some(child) = self.list_box.row_at_index(i) {
+            values.push(child);
+            i += 1;
+        }
+
+        values
+    }
+
+    // removes all list box items
+    fn clear(&self) {
+        let children = self.get_children();
+        for child in children {
+            self.list_box.remove(&child);
+        }
+    }
+
+    fn create_list_item(&self, label: &str) -> ListItem {
+        let new_item = ListItem::new();
+        new_item.set_property("label", label);
+        new_item.connect_closure(
+            "delete",
+            false,
+            closure_local!(@weak-allow-none self as list => move |list_item: ListItem, _value: String| {
+                if let Some(list) = list {
+                    list.list_box.remove(&list_item);
+                };
+            }),
+        );
+
+        new_item
     }
 }
 
@@ -41,17 +87,7 @@ impl List {
             return;
         }
 
-        let new_item = ListItem::new();
-        new_item.set_property("label", text);
-        new_item.connect_closure(
-            "delete",
-            false,
-            closure_local!(@weak-allow-none self as list => move |list_item: ListItem, _value: String| {
-                if let Some(list) = list {
-                    list.list_box.remove(&list_item);
-                };
-            }),
-        );
+        let new_item = self.create_list_item(&text);
         self.list_box.append(&new_item);
     }
 }
