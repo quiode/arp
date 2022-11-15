@@ -36,6 +36,7 @@ impl ObjectImpl for Entry {
             vec![
                 ParamSpecString::builder("text").build(),
                 ParamSpecString::builder("link").build(),
+                ParamSpecString::builder("content").build(),
             ]
         });
         PROPERTIES.as_ref()
@@ -46,6 +47,9 @@ impl ObjectImpl for Entry {
             "text" => self
                 .entry_row
                 .set_title(value.get().expect("Value needs to be of type `String`!")),
+            "content" => self
+                .entry_row
+                .set_text(value.get().expect("Value needs to be of type `String`!")),
             "link" => self
                 .link_button
                 .set_uri(value.get().expect("Value needs to be of type `String`!")),
@@ -56,6 +60,7 @@ impl ObjectImpl for Entry {
     fn property(&self, _id: usize, pspec: &ParamSpec) -> glib::Value {
         match pspec.name() {
             "text" => self.entry_row.title().to_value(),
+            "content" => self.entry_row.text().to_value(),
             "link" => self.link_button.uri().to_value(),
             _ => unimplemented!(),
         }

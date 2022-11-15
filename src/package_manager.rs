@@ -82,6 +82,11 @@ impl Repository {
         Ok(())
     }
 
+    // gets a clone of the path
+    pub fn get_path(&self) -> String {
+        self.path.clone()
+    }
+
     // exports everything to the package build
     pub fn export_to_pkgbuild(&self) -> RResult<()> {
         let mut pkgbuild = fs::File::create(format!("{}/PKGBUILD", self.path))
@@ -248,7 +253,7 @@ package() {{
                 .join(","),
             gpgkeys = self
                 .data
-                .gpgkeys
+                .pgpkeys
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
@@ -262,6 +267,12 @@ package() {{
         pkgbuild
             .write_all(string.as_bytes())
             .or(Err(RepositoryError::PKGBUILDError))
+    }
+
+    // removes everything stored at path, doesn't do checks
+    // # USE CAREFULLY!
+    pub fn delete(&self) {
+        fs::remove_dir_all(self.path.clone());
     }
 
     fn read_data(repo_path: &str) -> RResult<RepositoryData> {
@@ -316,36 +327,36 @@ impl Drop for Repository {
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct RepositoryData {
-    username: Option<String>,
-    email: Option<String>,
-    name: Option<String>,
-    version: Option<String>,
-    rel: Option<String>,
-    epoch: Option<String>,
-    desc: Option<String>,
-    arch: Vec<String>,
-    url: Option<String>,
-    license: Vec<String>,
-    groups: Vec<String>,
-    depends: Vec<String>,
-    makedepends: Vec<String>,
-    checkdepends: Vec<String>,
-    optdepends: Vec<String>,
-    provides: Vec<String>,
-    conflicts: Vec<String>,
-    replaces: Vec<String>,
-    backup: Vec<String>,
-    options: Vec<String>,
-    install: Option<String>,
-    changelog: Option<String>,
-    source: Vec<String>,
-    noextract: Vec<String>,
-    gpgkeys: Vec<String>,
-    md5sums: Vec<String>,
-    prepare: Option<String>,
-    build: Option<String>,
-    check: Option<String>,
-    package: Option<String>,
+    pub username: Option<String>,
+    pub email: Option<String>,
+    pub name: Option<String>,
+    pub version: Option<String>,
+    pub rel: Option<String>,
+    pub epoch: Option<String>,
+    pub desc: Option<String>,
+    pub arch: Vec<String>,
+    pub url: Option<String>,
+    pub license: Vec<String>,
+    pub groups: Vec<String>,
+    pub depends: Vec<String>,
+    pub makedepends: Vec<String>,
+    pub checkdepends: Vec<String>,
+    pub optdepends: Vec<String>,
+    pub provides: Vec<String>,
+    pub conflicts: Vec<String>,
+    pub replaces: Vec<String>,
+    pub backup: Vec<String>,
+    pub options: Vec<String>,
+    pub install: Option<String>,
+    pub changelog: Option<String>,
+    pub source: Vec<String>,
+    pub noextract: Vec<String>,
+    pub pgpkeys: Vec<String>,
+    pub md5sums: Vec<String>,
+    pub prepare: Option<String>,
+    pub build: Option<String>,
+    pub check: Option<String>,
+    pub package: Option<String>,
 }
 
 pub type RResult<T> = Result<T, RepositoryError>;

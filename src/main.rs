@@ -20,6 +20,11 @@ fn main() {
     // Connect to "activate" signal of `app`
     app.connect_activate(build_ui);
 
+    // shortcuts
+    app.set_accels_for_action("win.close", &["<Ctrl>W"]);
+    app.set_accels_for_action("repo.save", &["<Ctrl>S"]);
+    app.set_accels_for_action("repo.publish", &["<Ctrl>P"]);
+
     // Run the application
     app.run();
 }

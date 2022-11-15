@@ -1,4 +1,7 @@
-use gtk::glib::{closure_local, ParamSpec, ParamSpecString, ParamSpecValueArray};
+use gtk::glib::{
+    closure_local, ParamSpec, ParamSpecGType, ParamSpecString, ParamSpecValueArray,
+    ParamSpecVariant, Variant, VariantType,
+};
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::*, Box, Button, Label, ListBox, ListBoxRow};
 use gtk::{CompositeTemplate, Entry, LinkButton};
@@ -114,7 +117,7 @@ impl ObjectImpl for List {
             vec![
                 ParamSpecString::builder("title").build(),
                 ParamSpecString::builder("link").build(),
-                ParamSpecValueArray::builder("data").build(),
+                ParamSpecVariant::builder("data", &VariantType::from_string("as").unwrap()).build(),
             ]
         });
         PROPERTIES.as_ref()
@@ -132,8 +135,10 @@ impl ObjectImpl for List {
                 .set_uri(value.get().expect("Value needs to be of type `String`!")),
             "data" => self.set_values(
                 value
-                    .get()
-                    .expect("Value needs to be of type `Vec<String>`!"),
+                    .get::<Variant>()
+                    .expect("Value needs to be of type `Variant<Vec<String>>`!")
+                    .get::<Vec<String>>()
+                    .expect("Value needs to be of type `Vec<String>`"),
             ),
             _ => unimplemented!(),
         }
@@ -143,7 +148,7 @@ impl ObjectImpl for List {
         match pspec.name() {
             "title" => self.label.text().to_value(),
             "link" => self.link_button.uri().to_value(),
-            "data" => self.get_values().to_value(),
+            "data" => self.get_values().to_variant().to_value(),
             _ => unimplemented!(),
         }
     }
