@@ -1,4 +1,4 @@
-use gtk::glib::{clone, closure_local, ParamSpec, ParamSpecString};
+use gtk::glib::{closure_local, ParamSpec, ParamSpecString, ParamSpecValueArray};
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::*, Box, Button, Label, ListBox};
 use gtk::{CompositeTemplate, Entry, LinkButton};
@@ -17,6 +17,18 @@ pub struct List {
     entry: TemplateChild<Entry>,
     #[template_child]
     list_box: TemplateChild<ListBox>,
+}
+
+impl List {
+    // gets the values from all the children and converts them to strings
+    fn get_values(&self) -> Vec<String> {
+        todo!()
+    }
+
+    // deletes all children and creates new one for each value
+    fn set_values(&self, values: Vec<String>) {
+        todo!()
+    }
 }
 
 #[gtk::template_callbacks]
@@ -66,6 +78,7 @@ impl ObjectImpl for List {
             vec![
                 ParamSpecString::builder("title").build(),
                 ParamSpecString::builder("link").build(),
+                ParamSpecValueArray::builder("data").build(),
             ]
         });
         PROPERTIES.as_ref()
@@ -81,6 +94,11 @@ impl ObjectImpl for List {
             "link" => self
                 .link_button
                 .set_uri(value.get().expect("Value needs to be of type `String`!")),
+            "data" => self.set_values(
+                value
+                    .get()
+                    .expect("Value needs to be of type `Vec<String>`!"),
+            ),
             _ => unimplemented!(),
         }
     }
@@ -89,6 +107,7 @@ impl ObjectImpl for List {
         match pspec.name() {
             "title" => self.label.text().to_value(),
             "link" => self.link_button.uri().to_value(),
+            "data" => self.get_values().to_value(),
             _ => unimplemented!(),
         }
     }

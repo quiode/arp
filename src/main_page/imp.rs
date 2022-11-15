@@ -3,9 +3,9 @@ use std::cell::RefCell;
 use gtk::gio::Settings;
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{self, clone};
+use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{prelude::*, template_callbacks, Button, Label, Popover, TextBuffer};
-use gtk::{CompositeTemplate, TextView};
+use gtk::CompositeTemplate;
 use once_cell::unsync::OnceCell;
 
 use crate::package_manager::Repository;
@@ -16,6 +16,18 @@ use crate::APP_ID;
 pub struct MainPage {
     repository: RefCell<Repository>,
     settings: OnceCell<Settings>,
+}
+
+impl MainPage {
+    // gets the values from the repository and applies them to the widgets
+    fn populate_widgets(&self) {
+        todo!()
+    }
+
+    // saves the state of the widgets to the repository
+    fn save_widget_sate(&self) {
+        todo!()
+    }
 }
 
 #[glib::object_subclass]
@@ -35,6 +47,7 @@ impl ObjectSubclass for MainPage {
 
 impl ObjectImpl for MainPage {
     fn constructed(&self) {
+        // load repo on settings change
         let settings = Settings::new(APP_ID);
 
         let path = settings.get::<Option<ObjectPath>>("project-path");
@@ -66,6 +79,8 @@ impl ObjectImpl for MainPage {
                         settings.set("project-path", &None::<ObjectPath>);
                         println!("{}",err);
                     }
+
+                    main_page.populate_widgets();
                 }
             }),
         );
@@ -77,6 +92,7 @@ impl ObjectImpl for MainPage {
 
     fn dispose(&self) {
         if let Ok(repo) = self.repository.try_borrow() {
+            self.save_widget_sate();
             repo.save_data().ok();
         }
     }
