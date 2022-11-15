@@ -5,6 +5,20 @@
             <attribute name="label" translatable="yes">About</attribute>
             <attribute name="action">win.about</attribute>
         </item>
+        <section>
+            <item>
+                <attribute name="label" translatable="yes">Delete</attribute>
+                <attribute name="action">repo.delete</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">Save</attribute>
+                <attribute name="action">repo.save</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">Publish</attribute>
+                <attribute name="action">repo.publish</attribute>
+            </item>
+        </section>
     </menu>
     <template class="MainPage" parent="GtkBox">
         <property name="orientation">vertical</property>
@@ -404,6 +418,36 @@
                                 <property name="expanded">true</property>
                                 <child>
                                     <!-- TODO: Option to generate based on file: if it is a binary, different programming languages (only support rust), and custom: provide custom script -->
+                                </child>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkSeparator">
+                                <property name="margin-top">20</property>
+                                <property name="margin-bottom">10</property>
+                            </object>
+                        </child>
+                        <child>
+                            <object class="GtkBox">
+                                <property name="orientation">horizontal</property>
+                                <property name="homogeneous">true</property>
+                                <property name="spacing">10</property>
+                                <property name="margin-top">10</property>
+                                <property name="margin-bottom">20</property>
+                                <child>
+                                    <object class="GtkButton">
+                                        <property name="label">Save</property>
+                                        <property name="action-name">repo.save</property>
+                                        <style>
+                                            <class name="suggested-action"/>
+                                        </style>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkButton">
+                                        <property name="label">Publish</property>
+                                        <property name="action-name">repo.publish</property>
+                                    </object>
                                 </child>
                             </object>
                         </child>
