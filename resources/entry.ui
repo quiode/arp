@@ -11,7 +11,7 @@
         </child>
         <child>
             <object class="GtkLinkButton" id="link_button">
-                <property name="icon-name">overexposure</property>
+                <property name="icon-name">arp-info-circle</property>
             </object>
         </child>
     </template>

@@ -15,7 +15,7 @@
                 </child>
                 <child>
                     <object class="GtkButton">
-                        <property name="icon-name">user-trash</property>
+                        <property name="icon-name">arp-trash</property>
                         <property name="margin-bottom">5</property>
                         <signal name="clicked" handler="handle_button_clicked" swapped="true"/>
                         <style>

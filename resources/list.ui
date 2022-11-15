@@ -36,7 +36,7 @@
                                 <child>
                                     <object class="GtkButton">
                                         <signal name="clicked" handler="handle_button_clicked" swapped="true"/>
-                                        <property name="icon-name">bqm-add</property>
+                                        <property name="icon-name">arp-plus</property>
                                     </object>
                                 </child>
                             </object>
@@ -61,7 +61,7 @@
         </child>
         <child>
             <object class="GtkLinkButton" id="link_button">
-                <property name="icon-name">overexposure</property>
+                <property name="icon-name">arp-info-circle</property>
             </object>
         </child>
     </template>

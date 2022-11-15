@@ -68,7 +68,7 @@ impl Window {
         action_about_window.connect_activate(clone!(@weak self as window => move |_action, _parameter| {
             // create about dialog
             let about_window = adw::AboutWindow::new();
-            about_window.set_application_icon("arp");
+            about_window.set_application_icon("arp-logo");
             about_window.set_application_name("ARP - AUR Uploader");
             about_window.set_developer_name("Dominik Schwaiger <mail@dominik-schwaiger.ch>");
             about_window.set_version("0.0.1");
