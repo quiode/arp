@@ -19,19 +19,30 @@ pub struct Repository {
 impl Repository {
     // creates a new repository
     pub fn new(repo_path: &str) -> RResult<Self> {
+        // check that directory is empty
         match Self::is_empty(repo_path) {
             Err(_) => return Err(RepositoryError::NotARepository),
             Ok(false) => return Err(RepositoryError::FolderNotEmpty),
             Ok(true) => (),
         }
 
+        // init git repo
         Command::new(format!("git"))
             .arg("init")
             .arg(repo_path)
             .output()
             .or(Err(RepositoryError::GitError))?;
 
+        // create new data for repo
         let data = RepositoryData::default();
+
+        // add gitignore
+        let mut gitignore = fs::File::create(format!("{}/.gitignore", repo_path))
+            .or(Err(RepositoryError::FileError))?;
+
+        gitignore
+            .write_all(b"")
+            .or(Err(RepositoryError::FileError))?;
 
         Ok(Self {
             path: repo_path.to_string(),
@@ -49,8 +60,43 @@ impl Repository {
         })
     }
 
+    // checks if all required fields are set, exports to pkgbuild, builds package and uploads package
+    pub fn publish(&self) -> RResult<()> {
+        // check if all values are set
+        if !self.required_set() {
+            return Err(RepositoryError::DataNotProvied);
+        }
+        // export to pkgbuild
+        self.export_to_pkgbuild()?;
+        // build package
+        self.build_package()
+        // set remote, is expected to fail if remote is already set
+        // self.register_package().ok();
+        // publish package
+        // self.upload()
+    }
+
+    // builds the package
+    fn build_package(&self) -> RResult<()> {
+        // get srcinfo
+        let output = Command::new("makepkg")
+            .current_dir(self.path.clone())
+            .arg("--printsrcinfo")
+            .output()
+            .or(Err(RepositoryError::MAKEPKGError))?;
+        let srcinfo = output.stdout.as_slice();
+
+        // save srcinfo
+        let mut srcinfo_file = fs::File::create(format!("{}/.SRCINFO", self.path))
+            .or(Err(RepositoryError::FileError))?;
+
+        srcinfo_file
+            .write_all(srcinfo)
+            .or(Err(RepositoryError::FileError))
+    }
+
     // uploads the repository to the aur
-    pub fn upload(&self) -> RResult<()> {
+    fn upload(&self) -> RResult<()> {
         self.run_command("git", vec!["fetch", "aur"])?;
         self.run_command("git", vec!["add", "."])?;
         self.run_command("git", vec!["commit", "-m", "\"commit through arp\""])?;
@@ -88,7 +134,7 @@ impl Repository {
     }
 
     // exports everything to the package build
-    pub fn export_to_pkgbuild(&self) -> RResult<()> {
+    fn export_to_pkgbuild(&self) -> RResult<()> {
         let mut pkgbuild = fs::File::create(format!("{}/PKGBUILD", self.path))
             .or(Err(RepositoryError::NotARepository))?;
 
@@ -258,10 +304,26 @@ package() {{
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            prepare = self.data.prepare.clone().unwrap_or(String::new()),
-            build = self.data.build.clone().unwrap_or(String::new()),
-            check = self.data.check.clone().unwrap_or(String::new()),
-            package = self.data.package.clone().unwrap_or(String::new()),
+            prepare = self
+                .data
+                .prepare
+                .clone()
+                .unwrap_or("echo 'todo!'".to_string()),
+            build = self
+                .data
+                .build
+                .clone()
+                .unwrap_or("echo 'todo!'".to_string()),
+            check = self
+                .data
+                .check
+                .clone()
+                .unwrap_or("echo 'todo!'".to_string()),
+            package = self
+                .data
+                .package
+                .clone()
+                .unwrap_or("echo 'todo!'".to_string()),
         );
 
         pkgbuild
@@ -273,6 +335,33 @@ package() {{
     // # USE CAREFULLY!
     pub fn delete(&self) {
         fs::remove_dir_all(self.path.clone());
+    }
+
+    // checks if the required options are set
+    fn required_set(&self) -> bool {
+        if let Some(name) = &self.data.name {
+            if name.is_empty() {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        if let Some(version) = &self.data.version {
+            if version.is_empty() {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        if let Some(rel) = &self.data.rel {
+            if rel.is_empty() {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        !self.data.arch.is_empty()
     }
 
     fn read_data(repo_path: &str) -> RResult<RepositoryData> {
@@ -370,6 +459,8 @@ pub enum RepositoryError {
     DataNotProvied,
     SerializeError,
     PKGBUILDError,
+    FileError,
+    MAKEPKGError,
 }
 
 impl Error for RepositoryError {}
@@ -384,6 +475,8 @@ impl Display for RepositoryError {
             RepositoryError::DataNotProvied => "Data not Provied",
             RepositoryError::SerializeError => "Serialize Error",
             RepositoryError::PKGBUILDError => "PKGBUILD Error",
+            RepositoryError::FileError => "File Error",
+            RepositoryError::MAKEPKGError => "makepkg Error",
         };
 
         write!(f, "{}", text)

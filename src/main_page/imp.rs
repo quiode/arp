@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 
 use adw::traits::MessageDialogExt;
-use adw::{ApplicationWindow, MessageDialog};
+use adw::{ApplicationWindow, MessageDialog, ToastOverlay, Toast};
 use gtk::gio::{ActionGroup, Settings, SimpleAction, SimpleActionGroup};
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{self, clone, Variant};
@@ -12,7 +12,7 @@ use once_cell::unsync::OnceCell;
 
 use crate::entry::Entry;
 use crate::list::List;
-use crate::package_manager::Repository;
+use crate::package_manager::{Repository, RepositoryError};
 use crate::APP_ID;
 
 #[derive(CompositeTemplate, Default)]
@@ -72,6 +72,8 @@ pub struct MainPage {
     pgpkeys: TemplateChild<List>,
     #[template_child]
     md5: TemplateChild<List>,
+    #[template_child]
+    toast_overlay: TemplateChild<ToastOverlay>,
 }
 
 impl MainPage {
@@ -164,7 +166,7 @@ impl MainPage {
         data.replaces = self.replaces.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
         data.backup = self.backup.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
         data.options = self.options.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
-        data.install = Some(self.epoch.property("content"));
+        data.install = Some(self.install.property("content"));
         data.changelog = Some(self.changelog.property("content"));
         data.source = self.sources.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
         data.noextract = self.noextract.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
@@ -259,8 +261,38 @@ impl ObjectImpl for MainPage {
         }));
 
         let save_action = SimpleAction::new("save", None);
+        save_action.connect_activate(clone!(@weak self as main_window => move |_action, _param|{
+            main_window.save_widget_sate();
+            let toast = match main_window.repository.borrow().save_data(){
+                Ok(_) => Toast::new("Project Saved"),
+                Err(_) => Toast::new("Error trying to save project!"),
+                };
+
+            toast.set_timeout(1);
+            
+            main_window.toast_overlay.add_toast(&toast);
+        }));
 
         let publish_action = SimpleAction::new("publish", None);
+        publish_action.connect_activate(clone!(@weak self as main_window => move |_action, _param|{
+            // safe window state
+            main_window.save_widget_sate();
+            if let Err(_) = main_window.repository.borrow().save_data(){
+                let toast = Toast::new("Error trying to save project!");
+                toast.set_timeout(1);
+                main_window.toast_overlay.add_toast(&toast);
+                return;
+            };
+
+            let toast = match main_window.repository.borrow().publish(){
+                Err(RepositoryError::DataNotProvied) => Toast::new("Not all required data set!"),
+                Err(_) => Toast::new("Error trying to publish project!"),
+                Ok(_) => Toast::new("Project published"),
+
+            };
+
+            main_window.toast_overlay.add_toast(&toast);
+        }));
 
         actions.add_action(&delete_action);
         actions.add_action(&save_action);
