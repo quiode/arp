@@ -76,6 +76,12 @@ impl Repository {
         // self.upload()
     }
 
+    // deletes every data point except path
+    pub fn clear(&mut self) {
+        let new_data = RepositoryData::default();
+        self.data = new_data;
+    }
+
     // builds the package
     fn build_package(&self) -> RResult<()> {
         // get srcinfo

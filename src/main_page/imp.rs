@@ -294,9 +294,26 @@ impl ObjectImpl for MainPage {
             main_window.toast_overlay.add_toast(&toast);
         }));
 
+        let clear_action = SimpleAction::new("clear", None);
+        clear_action.connect_activate(clone!(@weak self as main_window => move |_action, _param|{
+            let toast: Toast;
+            if let Ok(mut repo) = main_window.repository.try_borrow_mut(){
+                repo.clear();
+                drop(repo);
+                main_window.populate_widgets();
+                toast = Toast::new("Data cleared!");
+                toast.set_timeout(1);
+            } else{
+                toast = Toast::new("Error while clearing data!");
+            }
+
+            main_window.toast_overlay.add_toast(&toast);
+        }));
+
         actions.add_action(&delete_action);
         actions.add_action(&save_action);
         actions.add_action(&publish_action);
+        actions.add_action(&clear_action);
         self.instance().insert_action_group("repo", Some(&actions));
     }
 

@@ -3,16 +3,16 @@
     <menu id="main-menu">
         <section>
             <item>
-                <attribute name="label" translatable="yes">Delete</attribute>
-                <attribute name="action">repo.delete</attribute>
-            </item>
-            <item>
                 <attribute name="label" translatable="yes">Save</attribute>
                 <attribute name="action">repo.save</attribute>
             </item>
             <item>
                 <attribute name="label" translatable="yes">Publish</attribute>
                 <attribute name="action">repo.publish</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">Delete</attribute>
+                <attribute name="action">repo.delete</attribute>
             </item>
             <item>
                 <attribute name="label" translatable="yes">Clear</attribute>
