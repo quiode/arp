@@ -71,7 +71,7 @@ impl Repository {
         // build package
         self.build_package()
         // set remote, is expected to fail if remote is already set
-        // self.register_package().ok();
+        // self.register_package()?;
         // publish package
         // self.upload()
     }
@@ -395,6 +395,10 @@ package() {{
             Some(name) => name,
             None => return Err(RepositoryError::DataNotProvied),
         };
+        // remove repo, can cause error if remote doesn't exist so just ignore
+        self.run_command("git", vec!["remote", "remove", "aur"])
+            .ok();
+        // add repo
         self.run_command(
             "git",
             vec![

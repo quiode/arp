@@ -14,6 +14,10 @@
                 <attribute name="label" translatable="yes">Publish</attribute>
                 <attribute name="action">repo.publish</attribute>
             </item>
+            <item>
+                <attribute name="label" translatable="yes">Clear</attribute>
+                <attribute name="action">repo.clear</attribute>
+            </item>
         </section>
         <section>
             <item>
