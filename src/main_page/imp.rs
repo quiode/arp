@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 
 use adw::traits::MessageDialogExt;
 use adw::{ApplicationWindow, MessageDialog, ToastOverlay, Toast};
@@ -196,17 +197,36 @@ impl MainPage {
 
     // sets state of all expanders
     fn set_expanded(&self, expanded: bool){
-        self.maintainer_expander.set_expanded(expanded);
-        self.name_expander.set_expanded(expanded);
-        self.version_expander.set_expanded(expanded);
-        self.generic_expander.set_expanded(expanded);
-        self.depend_expander.set_expanded(expanded);
-        self.pkgrel_expander.set_expanded(expanded);
-        self.others_expander.set_expanded(expanded);
-        self.sources_expander.set_expanded(expanded);
-        self.integrity_expander.set_expanded(expanded);
-        self.scripts_expander.set_expanded(expanded);
+        self.get_expanders().values().for_each(|expander| expander.set_expanded(expanded));
+    }
 
+    // gets all expanders which are expanded
+    fn get_expanded(&self) -> Vec<String>{
+       let mut expanded = Vec::new(); 
+       for (expander_name, expander) in self.get_expanders().iter(){
+            if expander.is_expanded(){
+                expanded.push(expander_name.to_string());
+            }
+       }
+       
+       expanded
+    }
+
+    // gets all expanders
+    fn get_expanders(&self) -> HashMap<&str, &TemplateChild<Expander>>{
+        let mut hasmap = HashMap::new();
+        hasmap.insert("maintainer_expander", &self.maintainer_expander);
+        hasmap.insert("name_expander", &self.name_expander);
+        hasmap.insert("version_expander", &self.version_expander);
+        hasmap.insert("generic_expander", &self.generic_expander);
+        hasmap.insert("depend_expander", &self.depend_expander);
+        hasmap.insert("pkgrel_expander", &self.pkgrel_expander);
+        hasmap.insert("others_expander", &self.others_expander);
+        hasmap.insert("sources_expander", &self.sources_expander);
+        hasmap.insert("integrity_expander", &self.integrity_expander);
+        hasmap.insert("scripts_expander", &self.scripts_expander);
+
+        hasmap
     }
 }
 
