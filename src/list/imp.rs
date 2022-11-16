@@ -91,6 +91,7 @@ impl List {
         }
 
         let new_item = self.create_list_item(&text);
+        self.entry.set_text("");
         self.list_box.append(&new_item);
     }
 }
