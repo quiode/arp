@@ -4,9 +4,9 @@ use adw::traits::MessageDialogExt;
 use adw::{ApplicationWindow, MessageDialog, ToastOverlay, Toast};
 use gtk::gio::{ActionGroup, Settings, SimpleAction, SimpleActionGroup};
 use gtk::glib::variant::ObjectPath;
-use gtk::glib::{self, clone, Variant};
+use gtk::glib::{self, clone, Variant, VariantType, VariantTy};
 use gtk::subclass::prelude::*;
-use gtk::CompositeTemplate;
+use gtk::{CompositeTemplate, Expander};
 use gtk::{prelude::*, Window};
 use once_cell::unsync::OnceCell;
 
@@ -74,6 +74,26 @@ pub struct MainPage {
     md5: TemplateChild<List>,
     #[template_child]
     toast_overlay: TemplateChild<ToastOverlay>,
+    #[template_child]
+    maintainer_expander: TemplateChild<Expander>,
+    #[template_child]
+    name_expander: TemplateChild<Expander>,
+    #[template_child]
+    version_expander: TemplateChild<Expander>,
+    #[template_child]
+    generic_expander: TemplateChild<Expander>,
+    #[template_child]
+    depend_expander: TemplateChild<Expander>,
+    #[template_child]
+    pkgrel_expander: TemplateChild<Expander>,
+    #[template_child]
+    others_expander: TemplateChild<Expander>,
+    #[template_child]
+    sources_expander: TemplateChild<Expander>,
+    #[template_child]
+    integrity_expander: TemplateChild<Expander>,
+    #[template_child]
+    scripts_expander: TemplateChild<Expander>,
 }
 
 impl MainPage {
@@ -173,6 +193,21 @@ impl MainPage {
         data.pgpkeys = self.pgpkeys.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
         data.md5sums = self.md5.property::<Variant>("data").get().expect("Value needs to be of type `Vec<String>`!");
     }
+
+    // sets state of all expanders
+    fn set_expanded(&self, expanded: bool){
+        self.maintainer_expander.set_expanded(expanded);
+        self.name_expander.set_expanded(expanded);
+        self.version_expander.set_expanded(expanded);
+        self.generic_expander.set_expanded(expanded);
+        self.depend_expander.set_expanded(expanded);
+        self.pkgrel_expander.set_expanded(expanded);
+        self.others_expander.set_expanded(expanded);
+        self.sources_expander.set_expanded(expanded);
+        self.integrity_expander.set_expanded(expanded);
+        self.scripts_expander.set_expanded(expanded);
+
+    }
 }
 
 #[glib::object_subclass]
@@ -237,7 +272,7 @@ impl ObjectImpl for MainPage {
             .expect("Settings should only be set once!");
 
         // register actions
-        let actions = SimpleActionGroup::new();
+        let repo_actions = SimpleActionGroup::new();
 
         let delete_action = SimpleAction::new("delete", None);
         delete_action.connect_activate(clone!(@weak self as main_page => move |_action, _param|{
@@ -310,11 +345,21 @@ impl ObjectImpl for MainPage {
             main_window.toast_overlay.add_toast(&toast);
         }));
 
-        actions.add_action(&delete_action);
-        actions.add_action(&save_action);
-        actions.add_action(&publish_action);
-        actions.add_action(&clear_action);
-        self.instance().insert_action_group("repo", Some(&actions));
+        let toggle_expander_action = SimpleAction::new("open_expander", Some(VariantTy::BOOLEAN));
+        toggle_expander_action.connect_activate(clone!(@weak self as main_window => move |_action, param|{
+            if let Some(param) = param{
+                if let Some(param) = param.get::<bool>(){
+                    main_window.set_expanded(param);
+                }
+            }
+        }));
+
+        repo_actions.add_action(&delete_action);
+        repo_actions.add_action(&save_action);
+        repo_actions.add_action(&publish_action);
+        repo_actions.add_action(&clear_action);
+        repo_actions.add_action(&toggle_expander_action);
+        self.instance().insert_action_group("repo", Some(&repo_actions));
     }
 
     fn dispose(&self) {
