@@ -33,12 +33,12 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">Open New</attribute>
+        <attribute name="label" translatable="yes">Open</attribute>
         <attribute name="action">win.file-dialog</attribute>
         <attribute name="target" type="b">false</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Create New</attribute>
+        <attribute name="label" translatable="yes">Create</attribute>
         <attribute name="action">win.file-dialog</attribute>
         <attribute name="target" type="b">true</attribute>
       </item>
@@ -118,8 +118,39 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="Entry" id="package_name">
-                            <property name="text">Package Name</property>
+                            <property name="text">Package</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgname</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator">
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="margin-top">5</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="label">Package Type</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkDropDown" id="package_type">
+                            <property name="margin-start">0</property>
+                            <property name="margin-end">0</property>
+                            <property name="margin-top">5</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="model">
+                              <object class="GtkStringList">
+                                <items>
+                                  <item translatable="yes">Binary</item>
+                                  <item translatable="yes">Make File</item>
+                                  <item translatable="yes">Rust Cargo</item>
+                                  <item translatable="yes">Custom</item>
+                                </items>
+                              </object>
+                            </property>
                           </object>
                         </child>
                       </object>
