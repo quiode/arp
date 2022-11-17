@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::collections::HashMap;
 
 use adw::traits::MessageDialogExt;
 use adw::{ MessageDialog, ToastOverlay, Toast };
@@ -98,12 +99,11 @@ pub struct MainPage {
     scripts_expander: TemplateChild<Expander>,
 }
 
-
 impl MainPage {
     // gets the values from the repository and applies them to the widgets
     fn populate_widgets(&self) {
         let data = &self.repository.borrow().data;
-        
+
         self.maintainer_name.set_property(
             "content",
             data.username.clone().or(Some("".to_string())).unwrap()
@@ -155,11 +155,11 @@ impl MainPage {
         self.md5.set_property("data", data.md5sums.clone().to_variant());
         self.package_type.set_selected(data.package_type as u32);
     }
-    
+
     // saves the state of the widgets to the repository
     fn save_widget_sate(&self) {
         let data = &mut self.repository.borrow_mut().data;
-        
+
         data.username = Some(self.maintainer_name.property("content"));
         data.email = Some(self.maintainer_email.property("content"));
         data.name = Some(self.package_name.property("content"));
@@ -168,11 +168,11 @@ impl MainPage {
         data.epoch = Some(self.epoch.property("content"));
         data.desc = Some(self.description.property("content"));
         data.arch = self.architectures
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.url = Some(self.url.property("content"));
-            data.license = self.license
+        data.url = Some(self.url.property("content"));
+        data.license = self.license
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
@@ -180,77 +180,123 @@ impl MainPage {
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.depends = self.dependencies
+        data.depends = self.dependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.makedepends = self.makedependencies
+        data.makedepends = self.makedependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.checkdepends = self.checkdependencies
+        data.checkdepends = self.checkdependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.optdepends = self.optdependencies
+        data.optdepends = self.optdependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.provides = self.provides
-        .property::<Variant>("data")
+            .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.conflicts = self.conflicts
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.replaces = self.replaces
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.backup = self.backup
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.options = self.options
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.install = Some(self.install.property("content"));
         data.changelog = Some(self.changelog.property("content"));
         data.source = self.sources
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.noextract = self.noextract
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.pgpkeys = self.pgpkeys
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.md5sums = self.md5
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            if let Some(package_type) = num::FromPrimitive::from_u32(self.package_type.selected()) {
-                data.package_type = package_type;
+        data.noextract = self.noextract
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        data.pgpkeys = self.pgpkeys
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        data.md5sums = self.md5
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        if let Some(package_type) = num::FromPrimitive::from_u32(self.package_type.selected()) {
+            data.package_type = package_type;
+        }
+    }
+
+    // sets state of all expanders
+    fn set_expanded(&self, expanded: bool) {
+        self.get_expanders()
+            .values()
+            .for_each(|expander| expander.set_expanded(expanded));
+    }
+
+    // gets all expanders which are expanded
+    fn get_expanded(&self) -> Vec<String> {
+        let mut expanded = Vec::new();
+        for (expander_name, expander) in self.get_expanders().iter() {
+            if expander.is_expanded() {
+                expanded.push(expander_name.to_string());
             }
         }
 
-        // sets state of all expanders
-        fn set_expanded(&self, expanded: bool) {
-            self.maintainer_expander.set_expanded(expanded);
-            self.name_expander.set_expanded(expanded);
-            self.version_expander.set_expanded(expanded);
-            self.generic_expander.set_expanded(expanded);
-            self.depend_expander.set_expanded(expanded);
-        self.pkgrel_expander.set_expanded(expanded);
-        self.others_expander.set_expanded(expanded);
-        self.sources_expander.set_expanded(expanded);
-        self.integrity_expander.set_expanded(expanded);
-        self.scripts_expander.set_expanded(expanded);
+        expanded
+    }
+
+    // sets all expanders included in expanded list to expanded, all others not
+    fn set_expanded_expanders(&self, expanded: Vec<String>) {
+        let expanders = self.get_expanders();
+        for (name, expander) in expanders {
+            if expanded.contains(&name.to_string()) {
+                expander.set_expanded(true);
+            } else {
+                expander.set_expanded(false);
+            }
+        }
+    }
+
+    // gets all expanders
+    fn get_expanders(&self) -> HashMap<&str, &TemplateChild<Expander>> {
+        let mut hasmap = HashMap::new();
+        hasmap.insert("maintainer_expander", &self.maintainer_expander);
+        hasmap.insert("name_expander", &self.name_expander);
+        hasmap.insert("version_expander", &self.version_expander);
+        hasmap.insert("generic_expander", &self.generic_expander);
+        hasmap.insert("depend_expander", &self.depend_expander);
+        hasmap.insert("pkgrel_expander", &self.pkgrel_expander);
+        hasmap.insert("others_expander", &self.others_expander);
+        hasmap.insert("sources_expander", &self.sources_expander);
+        hasmap.insert("integrity_expander", &self.integrity_expander);
+        hasmap.insert("scripts_expander", &self.scripts_expander);
+
+        hasmap
+    }
+
+    // updates settings with all expanded expanders
+    fn update_settings_expanders(&self, settings: &Settings) {
+        let expanded = self.get_expanded();
+        settings.set("opened-expanders", &expanded);
+    }
+
+    // applies settings expanded to expanders
+    fn update_expanders_settings(&self, settings: &Settings) {
+        let expanded = settings.get::<Vec<String>>("opened-expanders");
+        self.set_expanded_expanders(expanded);
     }
 }
 
@@ -259,28 +305,31 @@ impl ObjectSubclass for MainPage {
     const NAME: &'static str = "MainPage";
     type Type = super::MainPage;
     type ParentType = gtk::Box;
-    
+
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
     }
-    
+
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
         obj.init_template();
     }
 }
 
 #[gtk::template_callbacks]
-impl MainPage{
+impl MainPage {
     #[template_callback]
-    fn handle_type_changed(&self, dropdown: &DropDown){
+    fn handle_type_changed(&self, dropdown: &DropDown) {
         todo!()
     }
 }
 
 impl ObjectImpl for MainPage {
     fn constructed(&self) {
-        // load repo on settings change
+        // load repo on settings change, set expanded state
         let settings = Settings::new(APP_ID);
+
+        // set expanded state
+        self.update_expanders_settings(&settings);
 
         let path = settings.get::<Option<ObjectPath>>("project-path");
 
@@ -297,6 +346,9 @@ impl ObjectImpl for MainPage {
         settings.connect_changed(
             Some("project-path"),
             clone!(@weak self as main_page => move |settings, key| {
+                // update expanders
+                main_page.update_expanders_settings(settings);
+
                 let path: Option<ObjectPath> = settings.get(key);
                 if let Some(path) = path {
                     // TODO: good error handling
@@ -345,6 +397,11 @@ impl ObjectImpl for MainPage {
         let save_action = SimpleAction::new("save", None);
         save_action.connect_activate(
             clone!(@weak self as main_window => move |_action, _param|{
+            // save expanders state
+            if let Some(settings) = main_window.settings.get(){
+                main_window.update_settings_expanders(settings);
+                }
+
             main_window.save_widget_sate();
             let toast = match main_window.repository.borrow().save_data(){
                 Ok(_) => Toast::new("Project Saved"),
@@ -418,6 +475,10 @@ impl ObjectImpl for MainPage {
     }
 
     fn dispose(&self) {
+        // save expanders state
+        if let Some(settings) = self.settings.get() {
+            self.update_settings_expanders(settings);
+        }
         self.save_widget_sate();
         if let Ok(repo) = self.repository.try_borrow() {
             repo.save_data().ok();
