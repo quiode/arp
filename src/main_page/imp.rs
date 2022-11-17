@@ -2,10 +2,10 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 
 use adw::traits::MessageDialogExt;
-use adw::{ApplicationWindow, MessageDialog, ToastOverlay, Toast};
-use gtk::gio::{ActionGroup, Settings, SimpleAction, SimpleActionGroup};
+use adw::{MessageDialog, ToastOverlay, Toast};
+use gtk::gio::{Settings, SimpleAction, SimpleActionGroup};
 use gtk::glib::variant::ObjectPath;
-use gtk::glib::{self, clone, Variant, VariantType, VariantTy};
+use gtk::glib::{self, clone, Variant, VariantTy};
 use gtk::subclass::prelude::*;
 use gtk::{CompositeTemplate, Expander};
 use gtk::{prelude::*, Window};
@@ -212,6 +212,18 @@ impl MainPage {
        expanded
     }
 
+    // sets all expanders included in expanded list to expanded, all others not
+    fn set_expanded_expanders(&self, expanded: Vec<String>){
+        let expanders = self.get_expanders();
+        for (name, expander) in expanders{
+            if expanded.contains(&name.to_string()){
+                expander.set_expanded(true);
+            } else{
+                expander.set_expanded(false);
+            }
+        }
+    }
+
     // gets all expanders
     fn get_expanders(&self) -> HashMap<&str, &TemplateChild<Expander>>{
         let mut hasmap = HashMap::new();
@@ -227,6 +239,19 @@ impl MainPage {
         hasmap.insert("scripts_expander", &self.scripts_expander);
 
         hasmap
+    }
+
+
+    // updates settings with all expanded expanders
+    fn update_settings_expanders(&self, settings: &Settings){
+        let expanded = self.get_expanded();
+        settings.set("opened-expanders", &expanded);
+    }
+
+    // applies settings expanded to expanders
+    fn update_expanders_settings(&self, settings: &Settings){
+        let expanded = settings.get::<Vec<String>>("opened-expanders");
+        self.set_expanded_expanders(expanded);
     }
 }
 
@@ -247,8 +272,11 @@ impl ObjectSubclass for MainPage {
 
 impl ObjectImpl for MainPage {
     fn constructed(&self) {
-        // load repo on settings change
+        // load repo on settings change, set expanded state
         let settings = Settings::new(APP_ID);
+
+        // set expanded state
+        self.update_expanders_settings(&settings);
 
         let path = settings.get::<Option<ObjectPath>>("project-path");
 
@@ -270,6 +298,9 @@ impl ObjectImpl for MainPage {
         settings.connect_changed(
             Some("project-path"),
             clone!(@weak self as main_page => move |settings, key| {
+                // update expanders
+                main_page.update_expanders_settings(settings);
+
                 let path: Option<ObjectPath> = settings.get(key);
                 if let Some(path) = path {
                     // TODO: good error handling
@@ -317,6 +348,11 @@ impl ObjectImpl for MainPage {
 
         let save_action = SimpleAction::new("save", None);
         save_action.connect_activate(clone!(@weak self as main_window => move |_action, _param|{
+            // save expanders state
+            if let Some(settings) = main_window.settings.get(){
+                main_window.update_settings_expanders(settings);
+                }
+
             main_window.save_widget_sate();
             let toast = match main_window.repository.borrow().save_data(){
                 Ok(_) => Toast::new("Project Saved"),
@@ -383,6 +419,10 @@ impl ObjectImpl for MainPage {
     }
 
     fn dispose(&self) {
+        // save expanders state
+        if let Some(settings) = self.settings.get(){
+            self.update_settings_expanders(settings);
+        }
         self.save_widget_sate();
         if let Ok(repo) = self.repository.try_borrow() {
             repo.save_data().ok();
