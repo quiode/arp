@@ -7,5 +7,6 @@
     <file compressed="true" preprocess="xml-stripblanks">entry.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">list.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">list_item.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">filepicker.ui</file>
   </gresource>
 </gresources>
