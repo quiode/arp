@@ -40,7 +40,26 @@ impl Repository {
             ::create(format!("{}/.gitignore", repo_path))
             .or(Err(RepositoryError::FileError))?;
 
-        gitignore.write_all(b"").or(Err(RepositoryError::FileError))?;
+        gitignore
+            .write_all(
+                b"
+#Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!PKGBUILD
+!.SRCINFO
+!data.json
+!.git/*
+!package.install
+!package.changelog
+
+# ...even if they are in subdirectories
+!*/
+"
+            )
+            .or(Err(RepositoryError::FileError))?;
 
         Ok(Self {
             path: repo_path.to_string(),
