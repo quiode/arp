@@ -392,9 +392,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="Entry" id="install">
+                          <object class="FilePicker" id="install">
                             <property name="text">Install Script</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#install</property>
+                            <property name="fileName">package.install</property>
                           </object>
                         </child>
                         <child>
@@ -404,9 +405,10 @@
                           </object>
                         </child>
                         <child>
-                          <object class="Entry" id="changelog">
-                            <property name="text">Changelog</property>
+                          <object class="FilePicker" id="changelog">
+                            <property name="text">Changelog File</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#changelog</property>
+                            <property name="fileName">package.changelog</property>
                           </object>
                         </child>
                       </object>

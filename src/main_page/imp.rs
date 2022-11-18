@@ -1,5 +1,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
 
 use adw::traits::MessageDialogExt;
 use adw::{ MessageDialog, ToastOverlay, Toast };
@@ -12,6 +14,7 @@ use gtk::{ prelude::*, Window };
 use once_cell::unsync::OnceCell;
 
 use crate::entry::Entry;
+use crate::file_picker::FilePicker;
 use crate::list::List;
 use crate::package_manager::{ Repository, RepositoryError, PackageType };
 use crate::APP_ID;
@@ -62,9 +65,9 @@ pub struct MainPage {
     #[template_child]
     options: TemplateChild<List>,
     #[template_child]
-    install: TemplateChild<Entry>,
+    install: TemplateChild<FilePicker>,
     #[template_child]
-    changelog: TemplateChild<Entry>,
+    changelog: TemplateChild<FilePicker>,
     #[template_child]
     source_file: TemplateChild<Entry>,
     #[template_child]
@@ -151,11 +154,11 @@ impl MainPage {
         self.backup.set_property("data", data.backup.clone().to_variant());
         self.options.set_property("data", data.options.clone().to_variant());
         self.install.set_property(
-            "content",
+            "filePath",
             data.install.clone().or(Some("".to_string())).unwrap()
         );
         self.changelog.set_property(
-            "content",
+            "filePath",
             data.changelog.clone().or(Some("".to_string())).unwrap()
         );
         self.sources.set_property("data", data.source.clone().to_variant());
@@ -163,6 +166,15 @@ impl MainPage {
         self.md5.set_property("data", data.md5sums.clone().to_variant());
         self.package_type.set_active(Some(data.package_type as u32));
     }
+
+    // // checks if the given file exists
+    // fn check_if_file_exists(&self, file_name: &str) -> bool {
+    //     if let Ok(repo) = self.repository.try_borrow() {
+    //         return Path::new(&format!("{}/{}", repo.get_path(), file_name)).exists();
+    //     }
+
+    //     false
+    // }
 
     // saves the state of the widgets to the repository
     fn save_widget_sate(&self) {
@@ -224,8 +236,8 @@ impl MainPage {
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-        data.install = Some(self.install.property("content"));
-        data.changelog = Some(self.changelog.property("content"));
+        data.install = Some(self.install.property("filePath"));
+        data.changelog = Some(self.changelog.property("filePath"));
         data.source = self.sources
             .property::<Variant>("data")
             .get()
@@ -250,36 +262,38 @@ impl MainPage {
     }
 
     // sets state of all expanders
-    fn set_expanded(&self, expanded: bool){
-        self.get_expanders().values().for_each(|expander| expander.set_expanded(expanded));
+    fn set_expanded(&self, expanded: bool) {
+        self.get_expanders()
+            .values()
+            .for_each(|expander| expander.set_expanded(expanded));
     }
 
     // gets all expanders which are expanded
-    fn get_expanded(&self) -> Vec<String>{
-       let mut expanded = Vec::new(); 
-       for (expander_name, expander) in self.get_expanders().iter(){
-            if expander.is_expanded(){
+    fn get_expanded(&self) -> Vec<String> {
+        let mut expanded = Vec::new();
+        for (expander_name, expander) in self.get_expanders().iter() {
+            if expander.is_expanded() {
                 expanded.push(expander_name.to_string());
             }
-       }
-       
-       expanded
+        }
+
+        expanded
     }
 
     // sets all expanders included in expanded list to expanded, all others not
-    fn set_expanded_expanders(&self, expanded: Vec<String>){
+    fn set_expanded_expanders(&self, expanded: Vec<String>) {
         let expanders = self.get_expanders();
-        for (name, expander) in expanders{
-            if expanded.contains(&name.to_string()){
+        for (name, expander) in expanders {
+            if expanded.contains(&name.to_string()) {
                 expander.set_expanded(true);
-            } else{
+            } else {
                 expander.set_expanded(false);
             }
         }
     }
 
     // gets all expanders
-    fn get_expanders(&self) -> HashMap<&str, &TemplateChild<Expander>>{
+    fn get_expanders(&self) -> HashMap<&str, &TemplateChild<Expander>> {
         let mut hasmap = HashMap::new();
         hasmap.insert("maintainer_expander", &self.maintainer_expander);
         hasmap.insert("name_expander", &self.name_expander);
@@ -295,15 +309,14 @@ impl MainPage {
         hasmap
     }
 
-
     // updates settings with all expanded expanders
-    fn update_settings_expanders(&self, settings: &Settings){
+    fn update_settings_expanders(&self, settings: &Settings) {
         let expanded = self.get_expanded();
         settings.set("opened-expanders", &expanded);
     }
 
     // applies settings expanded to expanders
-    fn update_expanders_settings(&self, settings: &Settings){
+    fn update_expanders_settings(&self, settings: &Settings) {
         let expanded = settings.get::<Vec<String>>("opened-expanders");
         self.set_expanded_expanders(expanded);
     }
@@ -433,7 +446,8 @@ impl ObjectImpl for MainPage {
         );
 
         let save_action = SimpleAction::new("save", None);
-        save_action.connect_activate(clone!(@weak self as main_window => move |_action, _param|{
+        save_action.connect_activate(
+            clone!(@weak self as main_window => move |_action, _param|{
             // save expanders state
             if let Some(settings) = main_window.settings.get(){
                 main_window.update_settings_expanders(settings);
@@ -512,7 +526,7 @@ impl ObjectImpl for MainPage {
 
     fn dispose(&self) {
         // save expanders state
-        if let Some(settings) = self.settings.get(){
+        if let Some(settings) = self.settings.get() {
             self.update_settings_expanders(settings);
         }
         self.save_widget_sate();
