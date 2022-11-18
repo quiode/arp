@@ -8,7 +8,7 @@ use crate::{
 };
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/window.ui")]
+#[template(resource = "/com/github/quiode/arp/pages/window.ui")]
 pub struct Window {
     pub settings: OnceCell<Settings>,
     #[template_child]

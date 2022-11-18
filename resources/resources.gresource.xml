@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/quiode/arp/">
-    <file compressed="true" preprocess="xml-stripblanks">window.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">start_page.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">main_page.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">entry.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">list.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">list_item.ui</file>
-    <file compressed="true" preprocess="xml-stripblanks">filepicker.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">pages/window.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">pages/start_page.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">pages/main_page.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">components/entry.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">components/list.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">components/list_item.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">components/filepicker.ui</file>
   </gresource>
 </gresources>

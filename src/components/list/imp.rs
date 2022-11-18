@@ -14,7 +14,7 @@ use once_cell::sync::Lazy;
 use super::list_item::ListItem;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/list.ui")]
+#[template(resource = "/com/github/quiode/arp/components/list.ui")]
 pub struct List {
     #[template_child]
     label: TemplateChild<Label>,

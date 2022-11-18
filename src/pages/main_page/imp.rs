@@ -17,7 +17,7 @@ use crate::package_manager::{ Repository, RepositoryError, PackageType };
 use crate::APP_ID;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/main_page.ui")]
+#[template(resource = "/com/github/quiode/arp/pages/main_page.ui")]
 pub struct MainPage {
     repository: RefCell<Repository>,
     settings: OnceCell<Settings>,

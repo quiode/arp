@@ -1,13 +1,13 @@
 use adw::traits::PreferencesRowExt;
 use adw::EntryRow;
-use gtk::glib::{ParamSpec, ParamSpecString};
+use gtk::glib::{ ParamSpec, ParamSpecString };
 use gtk::subclass::prelude::*;
 use gtk::CompositeTemplate;
-use gtk::{glib, prelude::*, LinkButton};
+use gtk::{ glib, prelude::*, LinkButton };
 use once_cell::sync::Lazy;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/entry.ui")]
+#[template(resource = "/com/github/quiode/arp/components/entry.ui")]
 pub struct Entry {
     #[template_child]
     link_button: TemplateChild<LinkButton>,
@@ -36,7 +36,7 @@ impl ObjectImpl for Entry {
             vec![
                 ParamSpecString::builder("text").build(),
                 ParamSpecString::builder("link").build(),
-                ParamSpecString::builder("content").build(),
+                ParamSpecString::builder("content").build()
             ]
         });
         PROPERTIES.as_ref()
@@ -44,15 +44,12 @@ impl ObjectImpl for Entry {
 
     fn set_property(&self, _id: usize, value: &glib::Value, pspec: &ParamSpec) {
         match pspec.name() {
-            "text" => self
-                .entry_row
-                .set_title(value.get().expect("Value needs to be of type `String`!")),
-            "content" => self
-                .entry_row
-                .set_text(value.get().expect("Value needs to be of type `String`!")),
-            "link" => self
-                .link_button
-                .set_uri(value.get().expect("Value needs to be of type `String`!")),
+            "text" =>
+                self.entry_row.set_title(value.get().expect("Value needs to be of type `String`!")),
+            "content" =>
+                self.entry_row.set_text(value.get().expect("Value needs to be of type `String`!")),
+            "link" =>
+                self.link_button.set_uri(value.get().expect("Value needs to be of type `String`!")),
             _ => unimplemented!(),
         }
     }
