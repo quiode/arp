@@ -1,13 +1,7 @@
-use std::{
-    error::Error,
-    fmt::Display,
-    fs::{self},
-    io::{self, Read, Write},
-    process::Command,
-};
+use std::{ error::Error, fmt::Display, fs::{ self }, io::{ self, Read, Write }, process::Command };
 
 use num_derive::FromPrimitive;
-use serde::{Deserialize, Serialize};
+use serde::{ Deserialize, Serialize };
 
 const DATA_PATH: &str = "data.json";
 
@@ -22,8 +16,12 @@ impl Repository {
     pub fn new(repo_path: &str) -> RResult<Self> {
         // check that directory is empty
         match Self::is_empty(repo_path) {
-            Err(_) => return Err(RepositoryError::NotARepository),
-            Ok(false) => return Err(RepositoryError::FolderNotEmpty),
+            Err(_) => {
+                return Err(RepositoryError::NotARepository);
+            }
+            Ok(false) => {
+                return Err(RepositoryError::FolderNotEmpty);
+            }
             Ok(true) => (),
         }
 
@@ -38,12 +36,11 @@ impl Repository {
         let data = RepositoryData::default();
 
         // add gitignore
-        let mut gitignore = fs::File::create(format!("{}/.gitignore", repo_path))
+        let mut gitignore = fs::File
+            ::create(format!("{}/.gitignore", repo_path))
             .or(Err(RepositoryError::FileError))?;
 
-        gitignore
-            .write_all(b"")
-            .or(Err(RepositoryError::FileError))?;
+        gitignore.write_all(b"").or(Err(RepositoryError::FileError))?;
 
         Ok(Self {
             path: repo_path.to_string(),
@@ -94,12 +91,11 @@ impl Repository {
         let srcinfo = output.stdout.as_slice();
 
         // save srcinfo
-        let mut srcinfo_file = fs::File::create(format!("{}/.SRCINFO", self.path))
+        let mut srcinfo_file = fs::File
+            ::create(format!("{}/.SRCINFO", self.path))
             .or(Err(RepositoryError::FileError))?;
 
-        srcinfo_file
-            .write_all(srcinfo)
-            .or(Err(RepositoryError::FileError))
+        srcinfo_file.write_all(srcinfo).or(Err(RepositoryError::FileError))
     }
 
     // uploads the repository to the aur
@@ -116,11 +112,11 @@ impl Repository {
         let json = serde_json::to_string(&self.data).or(Err(RepositoryError::SerializeError))?;
 
         // save file
-        let mut file = fs::File::create(&format!("{}/{}", self.path, DATA_PATH))
+        let mut file = fs::File
+            ::create(&format!("{}/{}", self.path, DATA_PATH))
             .or(Err(RepositoryError::SerializeError))?;
 
-        file.write_all(json.as_bytes())
-            .or(Err(RepositoryError::SerializeError))?;
+        file.write_all(json.as_bytes()).or(Err(RepositoryError::SerializeError))?;
         Ok(())
     }
 
@@ -142,12 +138,50 @@ impl Repository {
 
     // exports everything to the package build
     fn export_to_pkgbuild(&self) -> RResult<()> {
-        let mut pkgbuild = fs::File::create(format!("{}/PKGBUILD", self.path))
+        struct CalculatedData {
+            prepare: Option<String>,
+            build: Option<String>,
+            check: Option<String>,
+            package: Option<String>,
+            source: Vec<String>,
+        }
+
+        let calc_data: CalculatedData = match self.data.package_type {
+            PackageType::Binary => {
+                todo!()
+                // let source = self.data.source;
+                // if source.len() != 1 {
+                //     return Err(RepositoryError::DataNotProvied);
+                // }
+                // let url = format!("$pkgname-$pkgver::{}", source.get(0).unwrap());
+                // CalculatedData {
+                //     prepare: None,
+                //     build: None,
+                //     check: None,
+                //     package: Some("cd $pkgname-$pkgver
+
+                //     ".to_string()),
+                //     source: vec![url],
+                // }
+            }
+            PackageType::Make => todo!(),
+            PackageType::Cargo => todo!(),
+            PackageType::Custom =>
+                CalculatedData {
+                    prepare: self.data.prepare.clone(),
+                    build: self.data.build.clone(),
+                    check: self.data.check.clone(),
+                    package: self.data.package.clone(),
+                    source: self.data.source.clone(),
+                },
+        };
+
+        let mut pkgbuild = fs::File
+            ::create(format!("{}/PKGBUILD", self.path))
             .or(Err(RepositoryError::NotARepository))?;
 
         let string = format!(
-            "
-# Maintainer: {username} <{email}>
+            "# Maintainer: {username} <{email}>
 pkgname={name}
 pkgver={version}
 pkgrel={rel}
@@ -196,146 +230,96 @@ package() {{
             rel = self.data.rel.clone().unwrap_or(String::new()),
             epoch = self.data.epoch.clone().unwrap_or(String::new()),
             desc = self.data.desc.clone().unwrap_or(String::new()),
-            arch = self
-                .data
-                .arch
+            arch = self.data.arch
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
             url = self.data.url.clone().unwrap_or(String::new()),
-            license = self
-                .data
-                .license
+            license = self.data.license
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            groups = self
-                .data
-                .groups
+            groups = self.data.groups
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            depends = self
-                .data
-                .depends
+            depends = self.data.depends
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            makedepends = self
-                .data
-                .makedepends
+            makedepends = self.data.makedepends
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            checkdepends = self
-                .data
-                .checkdepends
+            checkdepends = self.data.checkdepends
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            optdepends = self
-                .data
-                .optdepends
+            optdepends = self.data.optdepends
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            provides = self
-                .data
-                .provides
+            provides = self.data.provides
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            conflicts = self
-                .data
-                .conflicts
+            conflicts = self.data.conflicts
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            replaces = self
-                .data
-                .replaces
+            replaces = self.data.replaces
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            backup = self
-                .data
-                .backup
+            backup = self.data.backup
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            options = self
-                .data
-                .options
+            options = self.data.options
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
             install = self.data.install.clone().unwrap_or(String::new()),
             changelog = self.data.changelog.clone().unwrap_or(String::new()),
-            source = self
-                .data
-                .source
+            source = calc_data.source
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            noextract = self
-                .data
-                .noextract
+            noextract = self.data.noextract
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            md5sums = self
-                .data
-                .md5sums
+            md5sums = self.data.md5sums
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            gpgkeys = self
-                .data
-                .pgpkeys
+            gpgkeys = self.data.pgpkeys
                 .iter()
                 .map(|val| format!("'{}'", val))
                 .collect::<Vec<String>>()
                 .join(","),
-            prepare = self
-                .data
-                .prepare
-                .clone()
-                .unwrap_or("echo 'todo!'".to_string()),
-            build = self
-                .data
-                .build
-                .clone()
-                .unwrap_or("echo 'todo!'".to_string()),
-            check = self
-                .data
-                .check
-                .clone()
-                .unwrap_or("echo 'todo!'".to_string()),
-            package = self
-                .data
-                .package
-                .clone()
-                .unwrap_or("echo 'todo!'".to_string()),
+            prepare = calc_data.prepare.clone().unwrap_or("echo ''".to_string()),
+            build = self.data.build.clone().unwrap_or("echo ''".to_string()),
+            check = self.data.check.clone().unwrap_or("echo ''".to_string()),
+            package = self.data.package.clone().unwrap_or("echo ''".to_string())
         );
 
-        pkgbuild
-            .write_all(string.as_bytes())
-            .or(Err(RepositoryError::PKGBUILDError))
+        pkgbuild.write_all(string.as_bytes()).or(Err(RepositoryError::PKGBUILDError))
     }
 
     // removes everything stored at path, doesn't do checks
@@ -372,12 +356,12 @@ package() {{
     }
 
     fn read_data(repo_path: &str) -> RResult<RepositoryData> {
-        let mut file = fs::File::open(&format!("{}/{}", repo_path, DATA_PATH))
+        let mut file = fs::File
+            ::open(&format!("{}/{}", repo_path, DATA_PATH))
             .or(Err(RepositoryError::NotARepository))?;
 
         let mut string_data = String::new();
-        file.read_to_string(&mut string_data)
-            .or(Err(RepositoryError::NotARepository))?;
+        file.read_to_string(&mut string_data).or(Err(RepositoryError::NotARepository))?;
 
         Ok(serde_json::from_str(&string_data).or(Err(RepositoryError::NotARepository))?)
     }
@@ -400,20 +384,16 @@ package() {{
     fn register_package(&self) -> RResult<()> {
         let name = match &self.data.name {
             Some(name) => name,
-            None => return Err(RepositoryError::DataNotProvied),
+            None => {
+                return Err(RepositoryError::DataNotProvied);
+            }
         };
         // remove repo, can cause error if remote doesn't exist so just ignore
-        self.run_command("git", vec!["remote", "remove", "aur"])
-            .ok();
+        self.run_command("git", vec!["remote", "remove", "aur"]).ok();
         // add repo
         self.run_command(
             "git",
-            vec![
-                "remote",
-                "add",
-                "aur",
-                &format!("ssh://aur@aur.archlinux.org/{}.git", name),
-            ],
+            vec!["remote", "add", "aur", &format!("ssh://aur@aur.archlinux.org/{}.git", name)]
         )?;
         self.run_command("git", vec!["fetch", "aur"])
     }

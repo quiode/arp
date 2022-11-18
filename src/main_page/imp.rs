@@ -7,13 +7,13 @@ use gtk::gio::{ Settings, SimpleAction, SimpleActionGroup };
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{ self, clone, Variant, VariantTy };
 use gtk::subclass::prelude::*;
-use gtk::{ CompositeTemplate, Expander, ComboBoxText };
+use gtk::{ CompositeTemplate, Expander, ComboBoxText, Separator };
 use gtk::{ prelude::*, Window };
 use once_cell::unsync::OnceCell;
 
 use crate::entry::Entry;
 use crate::list::List;
-use crate::package_manager::{ Repository, RepositoryError };
+use crate::package_manager::{ Repository, RepositoryError, PackageType };
 use crate::APP_ID;
 
 #[derive(CompositeTemplate, Default)]
@@ -101,6 +101,10 @@ pub struct MainPage {
     integrity_expander: TemplateChild<Expander>,
     #[template_child]
     scripts_expander: TemplateChild<Expander>,
+    #[template_child]
+    sep1: TemplateChild<Separator>,
+    #[template_child]
+    sep2: TemplateChild<Separator>,
 }
 
 impl MainPage {
@@ -332,21 +336,24 @@ impl MainPage {
                     if let Some(package_type) = num::FromPrimitive::from_u32(id) {
                         repo.data.package_type = package_type;
 
-                        match package_type {
-                            crate::package_manager::PackageType::Binary => {
-                                self.scripts_expander.hide();
-                                self.sources.hide();
-                                self.noextract.hide();
-                                self.pgpkeys.hide();
-                                self.md5.hide();
+                        // fix for now: TODO
+                        self.toast_overlay.add_toast(&Toast::new("Not implemented yet!"));
+                        dropdown.set_active(Some(PackageType::Custom as u32));
+                        repo.data.package_type = PackageType::Custom;
+                        // match package_type {
+                        //     // crate::package_manager::PackageType::Binary => {
+                        //     //     self.scripts_expander.hide();
+                        //     //     self.sources.hide();
+                        //     //     self.noextract.hide();
+                        //     //     self.pgpkeys.hide();
+                        //     //     self.md5.hide();
+                        //     //     self.sep1.hide();
+                        //     //     self.sep2.hide();
 
-                                self.source_file.show();
-                                self.md5_key.show();
-                            }
-                            crate::package_manager::PackageType::Make => println!("TODO"),
-                            crate::package_manager::PackageType::Cargo => println!("TODO"),
-                            crate::package_manager::PackageType::Custom => println!("TODO"),
-                        }
+                        //     //     self.source_file.show();
+                        //     //     self.md5_key.show();
+                        //     // }
+                        // }
                     }
                 }
             }
