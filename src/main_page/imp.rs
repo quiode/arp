@@ -7,7 +7,7 @@ use gtk::gio::{ Settings, SimpleAction, SimpleActionGroup };
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{ self, clone, Variant, VariantTy };
 use gtk::subclass::prelude::*;
-use gtk::{ CompositeTemplate, Expander, ComboBoxText };
+use gtk::{ CompositeTemplate, Expander, ComboBoxText, Separator };
 use gtk::{ prelude::*, Window };
 use once_cell::unsync::OnceCell;
 
@@ -101,6 +101,10 @@ pub struct MainPage {
     integrity_expander: TemplateChild<Expander>,
     #[template_child]
     scripts_expander: TemplateChild<Expander>,
+    #[template_child]
+    sep1: TemplateChild<Separator>,
+    #[template_child]
+    sep2: TemplateChild<Separator>,
 }
 
 impl MainPage {
@@ -339,6 +343,8 @@ impl MainPage {
                                 self.noextract.hide();
                                 self.pgpkeys.hide();
                                 self.md5.hide();
+                                self.sep1.hide();
+                                self.sep2.hide();
 
                                 self.source_file.show();
                                 self.md5_key.show();

@@ -429,13 +429,13 @@
                         </child>
                         <child>
                           <object class="Entry" id="source_file">
-                            <property name="text">Source File</property>
+                            <property name="text">Source</property>
                             <property name="visible">false</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#source</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
+                          <object class="GtkSeparator" id="sep1">
                             <property name="margin-start">5</property>
                             <property name="margin-end">5</property>
                           </object>
@@ -447,7 +447,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSeparator">
+                          <object class="GtkSeparator" id="sep2">
                             <property name="margin-start">5</property>
                             <property name="margin-end">5</property>
                           </object>
