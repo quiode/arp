@@ -3,16 +3,17 @@ mod list;
 mod list_item;
 mod main_page;
 mod package_manager;
+mod file_picker;
 mod start_page;
 mod window;
-use gtk::gio;
+use gtk::gio::resources_register_include;
 use gtk::prelude::*;
 
 const APP_ID: &str = "com.github.quiode.arp";
 
 fn main() {
     // Register and include resources
-    gio::resources_register_include!("compiled.gresource").expect("Failed to register resources.");
+    resources_register_include!("compiled.gresource").expect("Failed to register resources.");
 
     // Create a new application
     let app = adw::Application::builder().application_id(APP_ID).build();
