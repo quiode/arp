@@ -156,6 +156,7 @@ impl ObjectImpl for FilePicker {
 
         // sett settings
         let settings = Settings::new(APP_ID);
+        self.settings.set(settings);
     }
 }
 
