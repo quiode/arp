@@ -526,13 +526,6 @@
                     </child>
                   </object>
                 </child>
-                <child>
-                  <object class="FilePicker">
-                    <property name="text">Title Text</property>
-                    <property name="fileName">test</property>
-                    <property name="link">https://dominik-schwaiger.ch</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
