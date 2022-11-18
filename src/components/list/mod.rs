@@ -1,6 +1,7 @@
+pub mod list_item;
 mod imp;
 
-use gtk::glib::{self, Object};
+use gtk::glib::{ self, Object };
 
 glib::wrapper! {
     pub struct List(ObjectSubclass<imp::List>)

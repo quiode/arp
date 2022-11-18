@@ -3,16 +3,12 @@ use gtk::{ gio::Settings, glib, CompositeTemplate, Stack };
 use once_cell::sync::OnceCell;
 
 use crate::{
-    entry::Entry,
-    list::List,
-    list_item::ListItem,
-    main_page::MainPage,
-    start_page::StartPage,
-    file_picker::FilePicker,
+    pages::{ start_page::StartPage, main_page::MainPage },
+    components::{ entry::Entry, list::{ List, list_item::ListItem }, file_picker::FilePicker },
 };
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/window.ui")]
+#[template(resource = "/com/github/quiode/arp/pages/window.ui")]
 pub struct Window {
     pub settings: OnceCell<Settings>,
     #[template_child]

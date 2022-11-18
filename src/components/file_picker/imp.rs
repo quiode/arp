@@ -11,7 +11,7 @@ use once_cell::sync::{ Lazy, OnceCell };
 use crate::APP_ID;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/filepicker.ui")]
+#[template(resource = "/com/github/quiode/arp/components/filepicker.ui")]
 pub struct FilePicker {
     #[template_child]
     link_button: TemplateChild<LinkButton>,

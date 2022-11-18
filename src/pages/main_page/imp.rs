@@ -1,7 +1,5 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
 
 use adw::traits::MessageDialogExt;
 use adw::{ MessageDialog, ToastOverlay, Toast };
@@ -12,15 +10,14 @@ use gtk::subclass::prelude::*;
 use gtk::{ CompositeTemplate, Expander, ComboBoxText, Separator };
 use gtk::{ prelude::*, Window };
 use once_cell::unsync::OnceCell;
-
-use crate::entry::Entry;
-use crate::file_picker::FilePicker;
-use crate::list::List;
+use crate::components::entry::Entry;
+use crate::components::file_picker::FilePicker;
+use crate::components::list::List;
 use crate::package_manager::{ Repository, RepositoryError, PackageType };
 use crate::APP_ID;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/main_page.ui")]
+#[template(resource = "/com/github/quiode/arp/pages/main_page.ui")]
 pub struct MainPage {
     repository: RefCell<Repository>,
     settings: OnceCell<Settings>,
