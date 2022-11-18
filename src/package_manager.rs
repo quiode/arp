@@ -6,6 +6,7 @@ use std::{
     process::Command,
 };
 
+use num_derive::FromPrimitive;
 use serde::{Deserialize, Serialize};
 
 const DATA_PATH: &str = "data.json";
@@ -456,6 +457,16 @@ pub struct RepositoryData {
     pub build: Option<String>,
     pub check: Option<String>,
     pub package: Option<String>,
+    pub package_type: PackageType,
+}
+
+#[derive(Default, Debug, Clone, Copy, Serialize, Deserialize, FromPrimitive)]
+pub enum PackageType {
+    #[default]
+    Binary,
+    Make,
+    Cargo,
+    Custom,
 }
 
 pub type RResult<T> = Result<T, RepositoryError>;

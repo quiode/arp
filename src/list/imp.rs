@@ -1,6 +1,5 @@
 use gtk::glib::{
-    closure_local, ParamSpec, ParamSpecGType, ParamSpecString, ParamSpecValueArray,
-    ParamSpecVariant, Variant, VariantType,
+    closure_local, ParamSpec, ParamSpecString, ParamSpecVariant, Variant, VariantType,
 };
 use gtk::subclass::prelude::*;
 use gtk::{glib, prelude::*, Box, Button, Label, ListBox, ListBoxRow};

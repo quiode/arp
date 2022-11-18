@@ -1,9 +1,14 @@
-use adw::{prelude::*, subclass::prelude::*};
-use gtk::{gio::Settings, glib, CompositeTemplate, Stack};
+use adw::{ prelude::*, subclass::prelude::* };
+use gtk::{ gio::Settings, glib, CompositeTemplate, Stack };
 use once_cell::sync::OnceCell;
 
 use crate::{
-    entry::Entry, list::List, list_item::ListItem, main_page::MainPage, start_page::StartPage,
+    entry::Entry,
+    list::List,
+    list_item::ListItem,
+    main_page::MainPage,
+    start_page::StartPage,
+    file_picker::FilePicker,
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -29,6 +34,7 @@ impl ObjectSubclass for Window {
         Entry::ensure_type();
         List::ensure_type();
         ListItem::ensure_type();
+        FilePicker::ensure_type();
 
         klass.bind_template();
     }

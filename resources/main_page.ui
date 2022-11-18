@@ -33,12 +33,12 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">Open New</attribute>
+        <attribute name="label" translatable="yes">Open</attribute>
         <attribute name="action">win.file-dialog</attribute>
         <attribute name="target" type="b">false</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Create New</attribute>
+        <attribute name="label" translatable="yes">Create</attribute>
         <attribute name="action">win.file-dialog</attribute>
         <attribute name="target" type="b">true</attribute>
       </item>
@@ -118,8 +118,37 @@
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="Entry" id="package_name">
-                            <property name="text">Package Name</property>
+                            <property name="text">Package</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#pkgname</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSeparator">
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="margin-top">5</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="label">Package Type</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="package_type">
+                            <signal name="changed" handler="handle_type_changed" swapped="true"/>
+                            <property name="margin-start">0</property>
+                            <property name="margin-end">0</property>
+                            <property name="margin-top">5</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="active-id">0</property>
+                            <items>
+                              <item translatable="yes">Binary</item>
+                              <item translatable="yes">Make File</item>
+                              <item translatable="yes">Rust Cargo</item>
+                              <item translatable="yes">Custom</item>
+                            </items>
                           </object>
                         </child>
                       </object>
@@ -399,6 +428,13 @@
                           </object>
                         </child>
                         <child>
+                          <object class="Entry" id="source_file">
+                            <property name="text">Source File</property>
+                            <property name="visible">false</property>
+                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#source</property>
+                          </object>
+                        </child>
+                        <child>
                           <object class="GtkSeparator">
                             <property name="margin-start">5</property>
                             <property name="margin-end">5</property>
@@ -440,6 +476,13 @@
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
                           </object>
                         </child>
+                        <child>
+                          <object class="Entry" id="md5_key">
+                            <property name="text">MD5 Checksum</property>
+                            <property name="visible">false</property>
+                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -449,7 +492,6 @@
                     <property name="label">Scripts</property>
                     <property name="expanded">true</property>
                     <child>
-                      <!-- TODO: Option to generate based on file: if it is a binary, different programming languages (only support rust), makefile and custom: provide custom script -->
                     </child>
                   </object>
                 </child>
