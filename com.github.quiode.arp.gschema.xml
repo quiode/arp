@@ -5,9 +5,5 @@
             <default>nothing</default>
             <summary>Path to the project folder</summary>
         </key>
-        <key name="opened-expanders" type="as">
-            <default>[]</default>
-            <summary>An array of expander names that are openend</summary>
-        </key>
     </schema>
 </schemalist>
