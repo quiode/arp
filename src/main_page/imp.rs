@@ -6,7 +6,7 @@ use gtk::gio::{ Settings, SimpleAction, SimpleActionGroup };
 use gtk::glib::variant::ObjectPath;
 use gtk::glib::{ self, clone, Variant, VariantTy };
 use gtk::subclass::prelude::*;
-use gtk::{ CompositeTemplate, Expander, DropDown };
+use gtk::{ CompositeTemplate, Expander, ComboBoxText };
 use gtk::{ prelude::*, Window };
 use once_cell::unsync::OnceCell;
 
@@ -65,6 +65,8 @@ pub struct MainPage {
     #[template_child]
     changelog: TemplateChild<Entry>,
     #[template_child]
+    source_file: TemplateChild<Entry>,
+    #[template_child]
     sources: TemplateChild<List>,
     #[template_child]
     noextract: TemplateChild<List>,
@@ -73,7 +75,9 @@ pub struct MainPage {
     #[template_child]
     md5: TemplateChild<List>,
     #[template_child]
-    package_type: TemplateChild<DropDown>,
+    md5_key: TemplateChild<Entry>,
+    #[template_child]
+    package_type: TemplateChild<ComboBoxText>,
     #[template_child]
     toast_overlay: TemplateChild<ToastOverlay>,
     #[template_child]
@@ -98,12 +102,11 @@ pub struct MainPage {
     scripts_expander: TemplateChild<Expander>,
 }
 
-
 impl MainPage {
     // gets the values from the repository and applies them to the widgets
     fn populate_widgets(&self) {
         let data = &self.repository.borrow().data;
-        
+
         self.maintainer_name.set_property(
             "content",
             data.username.clone().or(Some("".to_string())).unwrap()
@@ -153,13 +156,13 @@ impl MainPage {
         self.sources.set_property("data", data.source.clone().to_variant());
         self.pgpkeys.set_property("data", data.pgpkeys.clone().to_variant());
         self.md5.set_property("data", data.md5sums.clone().to_variant());
-        self.package_type.set_selected(data.package_type as u32);
+        self.package_type.set_active(Some(data.package_type as u32));
     }
-    
+
     // saves the state of the widgets to the repository
     fn save_widget_sate(&self) {
         let data = &mut self.repository.borrow_mut().data;
-        
+
         data.username = Some(self.maintainer_name.property("content"));
         data.email = Some(self.maintainer_email.property("content"));
         data.name = Some(self.package_name.property("content"));
@@ -168,11 +171,11 @@ impl MainPage {
         data.epoch = Some(self.epoch.property("content"));
         data.desc = Some(self.description.property("content"));
         data.arch = self.architectures
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.url = Some(self.url.property("content"));
-            data.license = self.license
+        data.url = Some(self.url.property("content"));
+        data.license = self.license
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
@@ -180,72 +183,74 @@ impl MainPage {
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.depends = self.dependencies
+        data.depends = self.dependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.makedepends = self.makedependencies
+        data.makedepends = self.makedependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.checkdepends = self.checkdependencies
+        data.checkdepends = self.checkdependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            data.optdepends = self.optdependencies
+        data.optdepends = self.optdependencies
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.provides = self.provides
-        .property::<Variant>("data")
+            .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.conflicts = self.conflicts
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.replaces = self.replaces
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.backup = self.backup
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
         data.options = self.options
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
         data.install = Some(self.install.property("content"));
         data.changelog = Some(self.changelog.property("content"));
         data.source = self.sources
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.noextract = self.noextract
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.pgpkeys = self.pgpkeys
-        .property::<Variant>("data")
-        .get()
-        .expect("Value needs to be of type `Vec<String>`!");
-        data.md5sums = self.md5
-        .property::<Variant>("data")
-        .get()
+            .property::<Variant>("data")
+            .get()
             .expect("Value needs to be of type `Vec<String>`!");
-            if let Some(package_type) = num::FromPrimitive::from_u32(self.package_type.selected()) {
+        data.noextract = self.noextract
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        data.pgpkeys = self.pgpkeys
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        data.md5sums = self.md5
+            .property::<Variant>("data")
+            .get()
+            .expect("Value needs to be of type `Vec<String>`!");
+        if let Some(id) = self.package_type.active() {
+            if let Some(package_type) = num::FromPrimitive::from_u32(id) {
                 data.package_type = package_type;
             }
         }
+    }
 
-        // sets state of all expanders
-        fn set_expanded(&self, expanded: bool) {
-            self.maintainer_expander.set_expanded(expanded);
-            self.name_expander.set_expanded(expanded);
-            self.version_expander.set_expanded(expanded);
-            self.generic_expander.set_expanded(expanded);
-            self.depend_expander.set_expanded(expanded);
+    // sets state of all expanders
+    fn set_expanded(&self, expanded: bool) {
+        self.maintainer_expander.set_expanded(expanded);
+        self.name_expander.set_expanded(expanded);
+        self.version_expander.set_expanded(expanded);
+        self.generic_expander.set_expanded(expanded);
+        self.depend_expander.set_expanded(expanded);
         self.pkgrel_expander.set_expanded(expanded);
         self.others_expander.set_expanded(expanded);
         self.sources_expander.set_expanded(expanded);
@@ -259,21 +264,47 @@ impl ObjectSubclass for MainPage {
     const NAME: &'static str = "MainPage";
     type Type = super::MainPage;
     type ParentType = gtk::Box;
-    
+
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
-    
+
     fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
         obj.init_template();
     }
 }
 
 #[gtk::template_callbacks]
-impl MainPage{
+impl MainPage {
     #[template_callback]
-    fn handle_type_changed(&self, dropdown: &DropDown){
-        todo!()
+    fn handle_type_changed(&self, dropdown: &ComboBoxText) {
+        if let Ok(mut repo) = self.repository.try_borrow_mut() {
+            if let Some(id) = dropdown.active() {
+                if id != (repo.data.package_type as u32) {
+                    // package type has changed
+                    if let Some(package_type) = num::FromPrimitive::from_u32(id) {
+                        repo.data.package_type = package_type;
+
+                        match package_type {
+                            crate::package_manager::PackageType::Binary => {
+                                self.scripts_expander.hide();
+                                self.sources.hide();
+                                self.noextract.hide();
+                                self.pgpkeys.hide();
+                                self.md5.hide();
+
+                                self.source_file.show();
+                                self.md5_key.show();
+                            }
+                            crate::package_manager::PackageType::Make => println!("TODO"),
+                            crate::package_manager::PackageType::Cargo => println!("TODO"),
+                            crate::package_manager::PackageType::Custom => println!("TODO"),
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

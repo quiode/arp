@@ -136,22 +136,19 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkDropDown" id="package_type">
+                          <object class="GtkComboBoxText" id="package_type">
+                            <signal name="changed" handler="handle_type_changed" swapped="true"/>
                             <property name="margin-start">0</property>
                             <property name="margin-end">0</property>
                             <property name="margin-top">5</property>
                             <property name="margin-bottom">5</property>
-                            <signal name="selected_item_notify" handler="handle_type_changed" swapped="true"/>
-                            <property name="model">
-                              <object class="GtkStringList">
-                                <items>
-                                  <item translatable="yes">Binary</item>
-                                  <item translatable="yes">Make File</item>
-                                  <item translatable="yes">Rust Cargo</item>
-                                  <item translatable="yes">Custom</item>
-                                </items>
-                              </object>
-                            </property>
+                            <property name="active-id">0</property>
+                            <items>
+                              <item translatable="yes">Binary</item>
+                              <item translatable="yes">Make File</item>
+                              <item translatable="yes">Rust Cargo</item>
+                              <item translatable="yes">Custom</item>
+                            </items>
                           </object>
                         </child>
                       </object>
@@ -431,6 +428,13 @@
                           </object>
                         </child>
                         <child>
+                          <object class="Entry" id="source_file">
+                            <property name="text">Source File</property>
+                            <property name="visible">false</property>
+                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#source</property>
+                          </object>
+                        </child>
+                        <child>
                           <object class="GtkSeparator">
                             <property name="margin-start">5</property>
                             <property name="margin-end">5</property>
@@ -469,6 +473,13 @@
                         <child>
                           <object class="List" id="md5">
                             <property name="title">MD5 Checksums</property>
+                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="Entry" id="md5_key">
+                            <property name="text">MD5 Checksum</property>
+                            <property name="visible">false</property>
                             <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
                           </object>
                         </child>
