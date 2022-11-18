@@ -336,8 +336,10 @@ impl MainPage {
                     if let Some(package_type) = num::FromPrimitive::from_u32(id) {
                         repo.data.package_type = package_type;
 
+                        // fix for now: TODO
                         self.toast_overlay.add_toast(&Toast::new("Not implemented yet!"));
                         dropdown.set_active(Some(PackageType::Custom as u32));
+                        repo.data.package_type = PackageType::Custom;
                         // match package_type {
                         //     // crate::package_manager::PackageType::Binary => {
                         //     //     self.scripts_expander.hide();
