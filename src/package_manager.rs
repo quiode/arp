@@ -86,11 +86,11 @@ impl Repository {
         // export to pkgbuild
         self.export_to_pkgbuild()?;
         // build package
-        self.build_package()
+        self.build_package()?;
         // set remote, is expected to fail if remote is already set
-        // self.register_package()?;
+        self.register_package()?;
         // publish package
-        // self.upload()
+        self.upload()
     }
 
     // deletes every data point except path
