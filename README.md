@@ -31,3 +31,4 @@ If none of the above options match your package, you can provide custom scripts.
 - git
 - [SSH key pair](https://wiki.archlinux.org/title/AUR_submission_guidelines#Authentication)
 - hicolor-icon-theme
+- gtksourceview5

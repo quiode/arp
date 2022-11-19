@@ -1,9 +1,9 @@
 use gtk::glib;
 use gtk::subclass::prelude::*;
-use gtk::{prelude::*, CompositeTemplate};
+use gtk::{ prelude::*, CompositeTemplate };
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/start_page.ui")]
+#[template(resource = "/com/github/quiode/arp/pages/start_page.ui")]
 pub struct StartPage {}
 
 #[glib::object_subclass]

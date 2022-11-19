@@ -1,15 +1,20 @@
 use gtk::glib::{
-    closure_local, ParamSpec, ParamSpecString, ParamSpecVariant, Variant, VariantType,
+    closure_local,
+    ParamSpec,
+    ParamSpecString,
+    ParamSpecVariant,
+    Variant,
+    VariantType,
 };
 use gtk::subclass::prelude::*;
-use gtk::{glib, prelude::*, Box, Button, Label, ListBox, ListBoxRow};
-use gtk::{CompositeTemplate, Entry, LinkButton};
+use gtk::{ glib, prelude::*, Box, Button, Label, ListBox, ListBoxRow };
+use gtk::{ CompositeTemplate, Entry, LinkButton };
 use once_cell::sync::Lazy;
 
-use crate::list_item::ListItem;
+use super::list_item::ListItem;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/github/quiode/arp/list.ui")]
+#[template(resource = "/com/github/quiode/arp/components/list.ui")]
 pub struct List {
     #[template_child]
     label: TemplateChild<Label>,
@@ -72,7 +77,7 @@ impl List {
                 if let Some(list) = list {
                     list.list_box.remove(&list_item);
                 };
-            }),
+            })
         );
 
         new_item
@@ -117,7 +122,7 @@ impl ObjectImpl for List {
             vec![
                 ParamSpecString::builder("title").build(),
                 ParamSpecString::builder("link").build(),
-                ParamSpecVariant::builder("data", &VariantType::from_string("as").unwrap()).build(),
+                ParamSpecVariant::builder("data", &VariantType::from_string("as").unwrap()).build()
             ]
         });
         PROPERTIES.as_ref()
@@ -130,16 +135,16 @@ impl ObjectImpl for List {
                 self.label.set_text(text);
                 self.entry.set_placeholder_text(Some(text));
             }
-            "link" => self
-                .link_button
-                .set_uri(value.get().expect("Value needs to be of type `String`!")),
-            "data" => self.set_values(
-                value
-                    .get::<Variant>()
-                    .expect("Value needs to be of type `Variant<Vec<String>>`!")
-                    .get::<Vec<String>>()
-                    .expect("Value needs to be of type `Vec<String>`"),
-            ),
+            "link" =>
+                self.link_button.set_uri(value.get().expect("Value needs to be of type `String`!")),
+            "data" =>
+                self.set_values(
+                    value
+                        .get::<Variant>()
+                        .expect("Value needs to be of type `Variant<Vec<String>>`!")
+                        .get::<Vec<String>>()
+                        .expect("Value needs to be of type `Vec<String>`")
+                ),
             _ => unimplemented!(),
         }
     }

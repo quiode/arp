@@ -227,111 +227,111 @@ md5sums=({md5sums})
 validpgpkeys=({gpgkeys})
 
 prepare() {{
-        {prepare}
+{prepare}
 }}
 
 build() {{
-        {build}
+{build}
 }}
 
 check() {{
-        {check}
+{check}
 }}
 
 package() {{
-        {package}
+{package}
 }}
 ",
-            name = self.data.name.clone().unwrap_or(String::new()),
-            email = self.data.email.clone().unwrap_or(String::new()),
-            username = self.data.username.clone().unwrap_or(String::new()),
-            version = self.data.version.clone().unwrap_or(String::new()),
-            rel = self.data.rel.clone().unwrap_or(String::new()),
-            epoch = self.data.epoch.clone().unwrap_or(String::new()),
-            desc = self.data.desc.clone().unwrap_or(String::new()),
+            name = self.data.name.clone().unwrap_or(String::new()).trim(),
+            email = self.data.email.clone().unwrap_or(String::new()).trim(),
+            username = self.data.username.clone().unwrap_or(String::new()).trim(),
+            version = self.data.version.clone().unwrap_or(String::new()).trim(),
+            rel = self.data.rel.clone().unwrap_or(String::new()).trim(),
+            epoch = self.data.epoch.clone().unwrap_or(String::new()).trim(),
+            desc = self.data.desc.clone().unwrap_or(String::new()).trim(),
             arch = self.data.arch
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
-            url = self.data.url.clone().unwrap_or(String::new()),
+                .join(" "),
+            url = self.data.url.clone().unwrap_or(String::new()).trim(),
             license = self.data.license
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             groups = self.data.groups
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             depends = self.data.depends
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             makedepends = self.data.makedepends
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             checkdepends = self.data.checkdepends
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             optdepends = self.data.optdepends
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             provides = self.data.provides
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             conflicts = self.data.conflicts
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             replaces = self.data.replaces
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             backup = self.data.backup
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             options = self.data.options
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
-            install = self.data.install.clone().unwrap_or(String::new()),
-            changelog = self.data.changelog.clone().unwrap_or(String::new()),
+                .join(" "),
+            install = self.data.install.clone().unwrap_or(String::new()).trim(),
+            changelog = self.data.changelog.clone().unwrap_or(String::new()).trim(),
             source = calc_data.source
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             noextract = self.data.noextract
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             md5sums = self.data.md5sums
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             gpgkeys = self.data.pgpkeys
                 .iter()
-                .map(|val| format!("'{}'", val))
+                .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
-                .join(","),
+                .join(" "),
             prepare = calc_data.prepare.clone().unwrap_or("echo ''".to_string()),
             build = self.data.build.clone().unwrap_or("echo ''".to_string()),
             check = self.data.check.clone().unwrap_or("echo ''".to_string()),

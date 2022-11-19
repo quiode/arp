@@ -1,11 +1,7 @@
-mod entry;
-mod list;
-mod list_item;
-mod main_page;
 mod package_manager;
-mod file_picker;
-mod start_page;
 mod window;
+mod components;
+mod pages;
 use gtk::gio::resources_register_include;
 use gtk::prelude::*;
 
