@@ -500,7 +500,7 @@
                         <property name="baseline-position">center</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="TextEditor">
+                          <object class="TextEditor" id="prepare">
                             <property name="title">prepare() Function</property>
                             <property name="language">sh</property>
                           </object>
@@ -512,7 +512,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="TextEditor">
+                          <object class="TextEditor" id="build">
                             <property name="title">build() Function</property>
                             <property name="language">sh</property>
                           </object>
@@ -524,7 +524,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="TextEditor">
+                          <object class="TextEditor" id="check">
                             <property name="title">check() Function</property>
                             <property name="language">sh</property>
                           </object>
@@ -536,7 +536,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="TextEditor">
+                          <object class="TextEditor" id="package">
                             <property name="title">package() Function</property>
                             <property name="language">sh</property>
                           </object>

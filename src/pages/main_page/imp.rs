@@ -13,6 +13,7 @@ use once_cell::unsync::OnceCell;
 use crate::components::entry::Entry;
 use crate::components::file_picker::FilePicker;
 use crate::components::list::List;
+use crate::components::text_editor::TextEditor;
 use crate::package_manager::{ Repository, RepositoryError, PackageType };
 use crate::APP_ID;
 
@@ -105,6 +106,14 @@ pub struct MainPage {
     sep1: TemplateChild<Separator>,
     #[template_child]
     sep2: TemplateChild<Separator>,
+    #[template_child]
+    check: TemplateChild<TextEditor>,
+    #[template_child]
+    prepare: TemplateChild<TextEditor>,
+    #[template_child]
+    build: TemplateChild<TextEditor>,
+    #[template_child]
+    package: TemplateChild<TextEditor>,
 }
 
 impl MainPage {
@@ -162,6 +171,10 @@ impl MainPage {
         self.pgpkeys.set_property("data", data.pgpkeys.clone().to_variant());
         self.md5.set_property("data", data.md5sums.clone().to_variant());
         self.package_type.set_active(Some(data.package_type as u32));
+        self.check.set_property("text", data.check.clone().or(Some("".to_string())).unwrap());
+        self.prepare.set_property("text", data.prepare.clone().or(Some("".to_string())).unwrap());
+        self.build.set_property("text", data.build.clone().or(Some("".to_string())).unwrap());
+        self.package.set_property("text", data.package.clone().or(Some("".to_string())).unwrap());
     }
 
     // // checks if the given file exists
@@ -255,6 +268,10 @@ impl MainPage {
             if let Some(package_type) = num::FromPrimitive::from_u32(id) {
                 data.package_type = package_type;
             }
+            data.check = Some(self.check.property("text"));
+            data.prepare = Some(self.prepare.property("text"));
+            data.build = Some(self.build.property("text"));
+            data.package = Some(self.package.property("text"));
         }
     }
 

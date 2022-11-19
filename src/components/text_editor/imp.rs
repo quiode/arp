@@ -83,7 +83,13 @@ impl ObjectImpl for TextEditor {
     fn property(&self, _id: usize, pspec: &ParamSpec) -> glib::Value {
         match pspec.name() {
             "title" => self.label.text().to_value(),
-            "text" => self.buffer.get().unwrap().to_string().to_value(),
+            "text" => {
+                let buffer = self.buffer.get().unwrap();
+                let start = buffer.start_iter();
+                let end = buffer.end_iter();
+                let text = buffer.text(&start, &end, true).to_value();
+                text
+            }
             "language" =>
                 self.buffer
                     .get()
