@@ -19,8 +19,8 @@
         <attribute name="action">repo.save</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Install</attribute>
-        <attribute name="action">repo.install</attribute>
+        <attribute name="label" translatable="yes">Build</attribute>
+        <attribute name="action">repo.build</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">Publish</attribute>
@@ -471,31 +471,6 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkExpander" id="integrity_expander">
-                    <property name="label">Integrity</property>
-                    <property name="expanded">true</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="baseline-position">center</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="List" id="md5">
-                            <property name="title">MD5 Checksums</property>
-                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="Entry" id="md5_key">
-                            <property name="text">MD5 Checksum</property>
-                            <property name="visible">false</property>
-                            <property name="link">https://wiki.archlinux.org/title/PKGBUILD#md5sums</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkExpander" id="scripts_expander">
                     <property name="label">Scripts</property>
                     <property name="expanded">true</property>
@@ -579,8 +554,8 @@
                     </child>
                     <child>
                       <object class="GtkButton">
-                        <property name="label">Install Locally</property>
-                        <property name="action-name">repo.install</property>
+                        <property name="label">Build Locally</property>
+                        <property name="action-name">repo.build</property>
                       </object>
                     </child>
                     <child>
