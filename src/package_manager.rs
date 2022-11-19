@@ -94,7 +94,7 @@ impl Repository {
     }
 
     // installs the package locally
-    pub fn install(&self) -> RResult<()> {
+    pub fn build(&self) -> RResult<()> {
         // check if all values are set
         if !self.required_set() {
             return Err(RepositoryError::DataNotProvied);
@@ -102,9 +102,7 @@ impl Repository {
         // export to pkgbuild
         self.export_to_pkgbuild()?;
         // build package
-        self.build_package()?;
-        // install package
-        self.install_package()
+        self.build_package()
     }
 
     // deletes every data point except path
@@ -167,11 +165,6 @@ impl Repository {
     // gets a clone of the path
     pub fn get_path(&self) -> String {
         self.path.clone()
-    }
-
-    // installs package locally
-    fn install_package(&self) -> RResult<()> {
-        self.run_command("makepkg", vec!["-sif"])
     }
 
     // exports everything to the package build
@@ -242,8 +235,8 @@ install={install}
 changelog={changelog}
 source=({source})
 noextract=({noextract})
-md5sums=({md5sums})
 validpgpkeys=({gpgkeys})
+{checksums}
 
 {prepare}
 
@@ -333,11 +326,6 @@ validpgpkeys=({gpgkeys})
                 .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
                 .join(" "),
-            md5sums = self.data.md5sums
-                .iter()
-                .map(|val| format!("'{}'", val.trim()))
-                .collect::<Vec<String>>()
-                .join(" "),
             gpgkeys = self.data.pgpkeys
                 .iter()
                 .map(|val| format!("'{}'", val.trim()))
@@ -382,7 +370,8 @@ validpgpkeys=({gpgkeys})
                         {}
                     }}", text)
                 }
-            }
+            },
+            checksums = self.gen_checksums()?
         );
 
         pkgbuild.write_all(string.as_bytes()).or(Err(RepositoryError::PKGBUILDError))
@@ -390,8 +379,8 @@ validpgpkeys=({gpgkeys})
 
     // removes everything stored at path, doesn't do checks
     // # USE CAREFULLY!
-    pub fn delete(&self) {
-        fs::remove_dir_all(self.path.clone());
+    pub fn delete(&self) -> RResult<()> {
+        fs::remove_dir_all(self.path.clone()).or(Err(RepositoryError::FileError))
     }
 
     // checks if the required options are set
@@ -463,6 +452,22 @@ validpgpkeys=({gpgkeys})
         )?;
         self.run_command("git", vec!["fetch", "aur"])
     }
+
+    // creates checksums with makepkg
+    fn gen_checksums(&self) -> RResult<String> {
+        // get checksums
+        let output = Command::new("makepkg")
+            .current_dir(self.path.clone())
+            .arg("-g")
+            .output()
+            .or(Err(RepositoryError::MAKEPKGError))?;
+        let mut checksums = String::new();
+        output.stdout
+            .as_slice()
+            .read_to_string(&mut checksums)
+            .or(Err(RepositoryError::ConvertError))?;
+        Ok(checksums)
+    }
 }
 
 impl Drop for Repository {
@@ -498,7 +503,6 @@ pub struct RepositoryData {
     pub source: Vec<String>,
     pub noextract: Vec<String>,
     pub pgpkeys: Vec<String>,
-    pub md5sums: Vec<String>,
     pub prepare: Option<String>,
     pub build: Option<String>,
     pub check: Option<String>,
@@ -528,6 +532,7 @@ pub enum RepositoryError {
     PKGBUILDError,
     FileError,
     MAKEPKGError,
+    ConvertError,
 }
 
 impl Error for RepositoryError {}
@@ -544,6 +549,7 @@ impl Display for RepositoryError {
             RepositoryError::PKGBUILDError => "PKGBUILD Error",
             RepositoryError::FileError => "File Error",
             RepositoryError::MAKEPKGError => "makepkg Error",
+            RepositoryError::ConvertError => "Convert Error",
         };
 
         write!(f, "{}", text)

@@ -75,10 +75,6 @@ pub struct MainPage {
     #[template_child]
     pgpkeys: TemplateChild<List>,
     #[template_child]
-    md5: TemplateChild<List>,
-    #[template_child]
-    md5_key: TemplateChild<Entry>,
-    #[template_child]
     package_type: TemplateChild<ComboBoxText>,
     #[template_child]
     toast_overlay: TemplateChild<ToastOverlay>,
@@ -98,8 +94,6 @@ pub struct MainPage {
     others_expander: TemplateChild<Expander>,
     #[template_child]
     sources_expander: TemplateChild<Expander>,
-    #[template_child]
-    integrity_expander: TemplateChild<Expander>,
     #[template_child]
     scripts_expander: TemplateChild<Expander>,
     #[template_child]
@@ -169,7 +163,6 @@ impl MainPage {
         );
         self.sources.set_property("data", data.source.clone().to_variant());
         self.pgpkeys.set_property("data", data.pgpkeys.clone().to_variant());
-        self.md5.set_property("data", data.md5sums.clone().to_variant());
         self.package_type.set_active(Some(data.package_type as u32));
         self.check.set_property("text", data.check.clone().or(Some("".to_string())).unwrap());
         self.prepare.set_property("text", data.prepare.clone().or(Some("".to_string())).unwrap());
@@ -260,10 +253,6 @@ impl MainPage {
             .property::<Variant>("data")
             .get()
             .expect("Value needs to be of type `Vec<String>`!");
-        data.md5sums = self.md5
-            .property::<Variant>("data")
-            .get()
-            .expect("Value needs to be of type `Vec<String>`!");
         if let Some(id) = self.package_type.active() {
             if let Some(package_type) = num::FromPrimitive::from_u32(id) {
                 data.package_type = package_type;
@@ -317,7 +306,6 @@ impl MainPage {
         hasmap.insert("pkgrel_expander", &self.pkgrel_expander);
         hasmap.insert("others_expander", &self.others_expander);
         hasmap.insert("sources_expander", &self.sources_expander);
-        hasmap.insert("integrity_expander", &self.integrity_expander);
         hasmap.insert("scripts_expander", &self.scripts_expander);
 
         hasmap
@@ -439,7 +427,6 @@ impl ObjectImpl for MainPage {
         let delete_action = SimpleAction::new("delete", None);
         delete_action.connect_activate(
             clone!(@weak self as main_page => move |_action, _param|{
-            println!("delete");
             let dialog = MessageDialog::new(None as Option<&Window>, Some("Are you sure?"), Some(&format!("Are you sure you want to delete this directory: {} and all it's children?", main_page.repository.borrow().get_path())));
             dialog.add_response("cancel", "No");
             dialog.add_response("delete", "Yes, Delete");
@@ -530,17 +517,26 @@ impl ObjectImpl for MainPage {
         })
         );
 
-        let install_action = SimpleAction::new("install", None);
-        install_action.connect_activate(
-            clone!(@weak self as main_window => move |_action, _param|{
+        let build_action = SimpleAction::new("build", None);
+        build_action.connect_activate(
+            clone!(@weak self as main_window => move |_action, _param|{// safe window state
+            main_window.save_widget_sate();
+            if let Err(_) = main_window.repository.borrow().save_data(){
+                let toast = Toast::new("Error trying to save project!");
+                toast.set_timeout(1);
+                main_window.toast_overlay.add_toast(&toast);
+                return;
+            };
+
                 let toast = if let Ok(repo) = main_window.repository.try_borrow(){
-                    if let Ok(_) = repo.install() {
-                        Toast::new("Package has been installed!")
-                    } else {
-                        Toast::new("Error while installing package")
+                    let build_result = repo.build();
+                    if let Ok(_) = build_result {
+                        Toast::new("Package has been built!")
+                    } else  {
+                        Toast::new(&format!("Error while building package: {:?}", build_result.unwrap_err()))
                     }
                 } else {
-                    Toast::new("Internal Error while installing package")
+                    Toast::new("Internal Error while building package")
                 };
 
                 main_window.toast_overlay.add_toast(&toast);
@@ -552,7 +548,7 @@ impl ObjectImpl for MainPage {
         repo_actions.add_action(&publish_action);
         repo_actions.add_action(&clear_action);
         repo_actions.add_action(&toggle_expander_action);
-        repo_actions.add_action(&install_action);
+        repo_actions.add_action(&build_action);
         self.instance().insert_action_group("repo", Some(&repo_actions));
     }
 
