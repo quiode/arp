@@ -1,6 +1,6 @@
 [package]
 name = "arp"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["Dominik Schwaiger <mail@dominik-schwaiger.ch>"]
 description = "GUI Application that let's the user upload packages to the AUR"
