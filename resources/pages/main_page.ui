@@ -19,6 +19,10 @@
         <attribute name="action">repo.save</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">Install</attribute>
+        <attribute name="action">repo.install</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">Publish</attribute>
         <attribute name="action">repo.publish</attribute>
       </item>
@@ -575,8 +579,17 @@
                     </child>
                     <child>
                       <object class="GtkButton">
+                        <property name="label">Install Locally</property>
+                        <property name="action-name">repo.install</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
                         <property name="label">Publish</property>
                         <property name="action-name">repo.publish</property>
+                        <style>
+                          <class name="destructive-action"/>
+                        </style>
                       </object>
                     </child>
                   </object>

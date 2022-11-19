@@ -93,6 +93,20 @@ impl Repository {
         self.upload()
     }
 
+    // installs the package locally
+    pub fn install(&self) -> RResult<()> {
+        // check if all values are set
+        if !self.required_set() {
+            return Err(RepositoryError::DataNotProvied);
+        }
+        // export to pkgbuild
+        self.export_to_pkgbuild()?;
+        // build package
+        self.build_package()?;
+        // install package
+        self.install_package()
+    }
+
     // deletes every data point except path
     pub fn clear(&mut self) {
         let new_data = RepositoryData::default();
@@ -153,6 +167,11 @@ impl Repository {
     // gets a clone of the path
     pub fn get_path(&self) -> String {
         self.path.clone()
+    }
+
+    // installs package locally
+    fn install_package(&self) -> RResult<()> {
+        self.run_command("makepkg", vec!["-sif"])
     }
 
     // exports everything to the package build
@@ -226,21 +245,13 @@ noextract=({noextract})
 md5sums=({md5sums})
 validpgpkeys=({gpgkeys})
 
-prepare() {{
 {prepare}
-}}
 
-build() {{
 {build}
-}}
 
-check() {{
 {check}
-}}
 
-package() {{
 {package}
-}}
 ",
             name = self.data.name.clone().unwrap_or(String::new()).trim(),
             email = self.data.email.clone().unwrap_or(String::new()).trim(),
@@ -332,10 +343,46 @@ package() {{
                 .map(|val| format!("'{}'", val.trim()))
                 .collect::<Vec<String>>()
                 .join(" "),
-            prepare = calc_data.prepare.clone().unwrap_or("echo ''".to_string()),
-            build = self.data.build.clone().unwrap_or("echo ''".to_string()),
-            check = self.data.check.clone().unwrap_or("echo ''".to_string()),
-            package = self.data.package.clone().unwrap_or("echo ''".to_string())
+            prepare = {
+                let text = calc_data.prepare.clone().unwrap_or("".to_string());
+                if text.trim().is_empty() {
+                    "".to_string()
+                } else {
+                    format!("prepare(){{
+                        {}
+                    }}", text)
+                }
+            },
+            build = {
+                let text = calc_data.build.clone().unwrap_or("".to_string());
+                if text.trim().is_empty() {
+                    "".to_string()
+                } else {
+                    format!("build(){{
+                        {}
+                    }}", text)
+                }
+            },
+            check = {
+                let text = calc_data.check.clone().unwrap_or("".to_string());
+                if text.trim().is_empty() {
+                    "".to_string()
+                } else {
+                    format!("check(){{
+                        {}
+                    }}", text)
+                }
+            },
+            package = {
+                let text = calc_data.package.clone().unwrap_or("".to_string());
+                if text.trim().is_empty() {
+                    "".to_string()
+                } else {
+                    format!("package(){{
+                        {}
+                    }}", text)
+                }
+            }
         );
 
         pkgbuild.write_all(string.as_bytes()).or(Err(RepositoryError::PKGBUILDError))

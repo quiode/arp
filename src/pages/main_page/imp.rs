@@ -530,11 +530,29 @@ impl ObjectImpl for MainPage {
         })
         );
 
+        let install_action = SimpleAction::new("install", None);
+        install_action.connect_activate(
+            clone!(@weak self as main_window => move |_action, _param|{
+                let toast = if let Ok(repo) = main_window.repository.try_borrow(){
+                    if let Ok(_) = repo.install() {
+                        Toast::new("Package has been installed!")
+                    } else {
+                        Toast::new("Error while installing package")
+                    }
+                } else {
+                    Toast::new("Internal Error while installing package")
+                };
+
+                main_window.toast_overlay.add_toast(&toast);
+            })
+        );
+
         repo_actions.add_action(&delete_action);
         repo_actions.add_action(&save_action);
         repo_actions.add_action(&publish_action);
         repo_actions.add_action(&clear_action);
         repo_actions.add_action(&toggle_expander_action);
+        repo_actions.add_action(&install_action);
         self.instance().insert_action_group("repo", Some(&repo_actions));
     }
 
