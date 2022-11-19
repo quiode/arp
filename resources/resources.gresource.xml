@@ -8,5 +8,6 @@
     <file compressed="true" preprocess="xml-stripblanks">components/list.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">components/list_item.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">components/filepicker.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">components/text_editor.ui</file>
   </gresource>
 </gresources>

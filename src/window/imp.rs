@@ -4,7 +4,12 @@ use once_cell::sync::OnceCell;
 
 use crate::{
     pages::{ start_page::StartPage, main_page::MainPage },
-    components::{ entry::Entry, list::{ List, list_item::ListItem }, file_picker::FilePicker },
+    components::{
+        entry::Entry,
+        list::{ List, list_item::ListItem },
+        file_picker::FilePicker,
+        text_editor::TextEditor,
+    },
 };
 
 #[derive(CompositeTemplate, Default)]
@@ -31,6 +36,7 @@ impl ObjectSubclass for Window {
         List::ensure_type();
         ListItem::ensure_type();
         FilePicker::ensure_type();
+        TextEditor::ensure_type();
 
         klass.bind_template();
     }
