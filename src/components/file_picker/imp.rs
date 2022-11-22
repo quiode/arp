@@ -86,6 +86,15 @@ impl FilePicker {
 
         file_dialog.present();
     }
+
+    // clears the selected file
+    #[template_callback]
+    fn handle_clear(&self, _button: &Button) {
+        let mut path = self.file_path.borrow_mut();
+        *path = String::new();
+
+        self.file_label.set_text("Select a file");
+    }
 }
 
 impl ObjectImpl for FilePicker {
@@ -156,7 +165,7 @@ impl ObjectImpl for FilePicker {
 
         // sett settings
         let settings = Settings::new(APP_ID);
-        self.settings.set(settings);
+        self.settings.set(settings).expect("Settings can only be set once!");
     }
 }
 
